@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luxe Men Salon &mdash; The Art of the Gentleman, Refined.</title>
+  <meta name="description" content="A rapidly expanding premium grooming brand. Turnkey salon setups with zero franchise fees and high-margin profitability. Partner with Luxe Men Salon." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- Cinematic Shopping Mall Mirror Sliding Doors Entrance -->
+  <div class="mall-portal" id="mallPortal" role="dialog" aria-modal="true" aria-label="Luxe Men Salon Entrance">
+    <div class="portal-seam-light" id="seamLight"></div>
+
+    <!-- Left Mirror Sliding Door -->
+    <div class="door-leaf door-left" id="doorLeft">
+      <div class="mirror-surface"></div>
+      <div class="mirror-bevel"></div>
+      <div class="door-frame-top"></div>
+      <div class="door-frame-bottom"></div>
+      <div class="mall-handle handle-left">
+        <div class="handle-mount top"></div>
+        <div class="handle-bar"></div>
+        <div class="handle-mount bottom"></div>
+      </div>
+      <div class="door-half-logo left-half">
+        <img src="images/logo.png" alt="Luxe Men Salon Logo" />
+      </div>
+    </div>
+
+    <!-- Right Mirror Sliding Door -->
+    <div class="door-leaf door-right" id="doorRight">
+      <div class="mirror-surface"></div>
+      <div class="mirror-bevel"></div>
+      <div class="door-frame-top"></div>
+      <div class="door-frame-bottom"></div>
+      <div class="mall-handle handle-right">
+        <div class="handle-mount top"></div>
+        <div class="handle-bar"></div>
+        <div class="handle-mount bottom"></div>
+      </div>
+      <div class="door-half-logo right-half">
+        <img src="images/logo.png" alt="Luxe Men Salon Logo" />
+      </div>
+    </div>
+
+    <!-- Entrance UI Overlay -->
+    <div class="portal-ui" id="portalUi">
+      <span class="portal-eyebrow">AUTOMATIC ENTRANCE</span>
+      <h2 class="portal-title">LUXE MEN SALON</h2>
+      <p class="portal-status"><span class="portal-status-dot"></span>Doors sliding open to the sanctuary&hellip;</p>
+      <button class="portal-action-btn" id="portalSkipBtn" type="button">Enter Sanctuary &rarr;</button>
+    </div>
+  </div>
+
+  <div class="gradient-orb orb-a" aria-hidden="true"></div>
+  <div class="gradient-orb orb-b" aria-hidden="true"></div>
+  <div class="noise" aria-hidden="true"></div>
+
+  <header class="nav" id="navbar">
+    <div class="nav-inner nav-island-inner">
+      <!-- Segment 1: Brand -->
+      <div class="nav-segment nav-segment-brand">
+        <a href="#home" class="brand">
+          <img src="images/logo.png" alt="Luxe Men Salon Logo" class="brand-logo" />
+          <div class="brand-text">
+            <span class="brand-name">LUXE&nbsp;MEN&nbsp;SALON</span>
+            <span class="brand-caption">Love Is In The Hair</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Segment 2: Navigation Links with Sliding Pill Indicator -->
+      <nav class="nav-segment nav-segment-links" id="navLinks" aria-label="Primary Navigation">
+        <div class="nav-capsule" id="navCapsule">
+          <div class="nav-sliding-pill" id="navSlidingPill" aria-hidden="true"></div>
+          <a href="#about" class="nav-item active" data-nav="about">About</a>
+          <a href="#experience" class="nav-item" data-nav="experience">The Experience</a>
+          <a href="#why" class="nav-item" data-nav="why">Why Us</a>
+          <a href="#models" class="nav-item" data-nav="models">Investment Models</a>
+          <a href="#testimonials" class="nav-item" data-nav="testimonials">Testimonials</a>
+          <a href="#contact" class="nav-item" data-nav="contact">Contact</a>
+        </div>
+
+        <!-- Mobile Drawer Quick Actions -->
+        <div class="nav-mobile-drawer-actions">
+          <a href="tel:+919626458516" class="nav-mobile-call-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span>Call: +91 9626458516</span>
+          </a>
+          <a href="#contact" class="btn btn-pill-gold nav-mobile-partner-btn">Partnership Inquiries</a>
+          <div class="nav-mobile-socials">
+            <a href="https://www.instagram.com/luxesalonz?utm_source=ig_web_button_share_sheet&stkn=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" class="nav-icon-btn nav-insta-btn" aria-label="Instagram">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+            <a href="https://wa.me/919626458516?text=Hi%20Luxe%20Men%20Salon%2C%20I%20would%20like%20to%20message%20you%20regarding%20appointments%20and%20franchise%20inquiries." target="_blank" rel="noopener noreferrer" class="nav-icon-btn nav-whatsapp-btn" aria-label="WhatsApp">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.24 8.24-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.196 8.196 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24zm4.52 11.53c-.25-.12-1.47-.72-1.7-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.15.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1 0 1.24.9 2.44 1.03 2.61.12.17 1.77 2.71 4.3 3.8.6.26 1.07.41 1.44.53.61.19 1.16.17 1.6.1.49-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.15-1.18-.07-.12-.23-.19-.48-.31z"/></svg>
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Segment 3: Quick Action Buttons (Direct Call + Partnership Inquiries) -->
+      <div class="nav-segment nav-segment-actions">
+        <!-- Direct Phone Calling Button -->
+        <a href="tel:+919626458516" class="nav-call-btn" title="Direct Phone Call: +91 9626458516" aria-label="Direct Phone Call: +91 9626458516">
+          <span class="nav-call-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          </span>
+          <span class="nav-call-text">+91 9626458516</span>
+        </a>
+
+        <!-- Partnership Inquiries Button -->
+        <a href="#contact" class="btn btn-pill-gold nav-partner-btn">Partnership Inquiries</a>
+
+        <!-- Instagram & WhatsApp Compact Buttons -->
+        <div class="nav-icons-group">
+          <a href="https://www.instagram.com/luxesalonz?utm_source=ig_web_button_share_sheet&stkn=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" class="nav-icon-btn nav-insta-btn" aria-label="Visit Luxe Men Salon on Instagram" title="Instagram @luxesalonz">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="https://wa.me/919626458516?text=Hi%20Luxe%20Men%20Salon%2C%20I%20would%20like%20to%20message%20you%20regarding%20appointments%20and%20franchise%20inquiries." target="_blank" rel="noopener noreferrer" class="nav-icon-btn nav-whatsapp-btn" aria-label="Message Luxe Men Salon on WhatsApp" title="Message on WhatsApp">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.24 8.24-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.196 8.196 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24zm4.52 11.53c-.25-.12-1.47-.72-1.7-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.15.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1 0 1.24.9 2.44 1.03 2.61.12.17 1.77 2.71 4.3 3.8.6.26 1.07.41 1.44.53.61.19 1.16.17 1.6.1.49-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.15-1.18-.07-.12-.23-.19-.48-.31z"/></svg>
+          </a>
+        </div>
+
+        <!-- Mobile Hamburger Toggle -->
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="hero" id="home">
+      <div class="hero-bg" aria-hidden="true">
+        <img src="images/hero-salon.jpg" alt="Luxe Men Salon Interior" class="hero-bg-img" />
+        <div class="hero-bg-overlay"></div>
+      </div>
+      <div class="hero-inner">
+        <div class="hero-crest reveal">
+          <img src="images/logo.png" alt="Luxe Men Salon Crest" class="hero-crest-img" />
+        </div>
+        <p class="eyebrow reveal">Premium Men&rsquo;s Grooming &middot; Turnkey Franchise</p>
+        <h1 class="hero-title reveal">The Art of the<br /><span class="serif-italic gold-text"><span class="gentleman-g-wrap"><span class="gentleman-hat" aria-hidden="true" title="Gentleman's Hat"><svg viewBox="0 0 120 80" class="hat-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="hatCrownGrad" x1="20" y1="15" x2="100" y2="60" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#242E44" />
+              <stop offset="35%" stop-color="#101726" />
+              <stop offset="70%" stop-color="#161E30" />
+              <stop offset="100%" stop-color="#080C14" />
+            </linearGradient>
+            <linearGradient id="hatBrimGrad" x1="5" y1="45" x2="115" y2="65" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#313C56" />
+              <stop offset="30%" stop-color="#182135" />
+              <stop offset="70%" stop-color="#101726" />
+              <stop offset="100%" stop-color="#080B12" />
+            </linearGradient>
+            <linearGradient id="hatBandGrad" x1="25" y1="44" x2="95" y2="52" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#E5C158" />
+              <stop offset="30%" stop-color="#FFF4C2" />
+              <stop offset="60%" stop-color="#D4AF37" />
+              <stop offset="100%" stop-color="#9A7B1C" />
+            </linearGradient>
+            <linearGradient id="hatTrimGrad" x1="5" y1="52" x2="115" y2="52" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#D4AF37" stop-opacity="0.9" />
+              <stop offset="50%" stop-color="#FFF5CB" stop-opacity="1" />
+              <stop offset="100%" stop-color="#C19A2E" stop-opacity="0.8" />
+            </linearGradient>
+            <linearGradient id="featherGrad" x1="40" y1="20" x2="55" y2="45" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#FFF0BA" />
+              <stop offset="50%" stop-color="#D4AF37" />
+              <stop offset="100%" stop-color="#846513" />
+            </linearGradient>
+            <filter id="hatGlow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#D4AF37" flood-opacity="0.4" />
+            </filter>
+          </defs>
+          <g filter="url(#hatGlow)">
+            <!-- Crown of Fedora -->
+            <path d="M34 52 C30 38 33 22 42 16 C48 12 55 18 60 17 C66 16 75 14 80 20 C85 26 88 38 86 52 Z" fill="url(#hatCrownGrad)" />
+            <!-- Crown Fedora Crease / Pinch Indentation Shadow -->
+            <path d="M44 17 C52 23 60 22 66 18 C71 22 65 29 55 28 C46 27 41 21 44 17 Z" fill="#06090F" opacity="0.65" />
+            <!-- Crown Left Pinch Shadow -->
+            <path d="M34 32 C38 28 42 36 39 46 C37 42 35 37 34 32 Z" fill="#05080E" opacity="0.5" />
+            <!-- Crown Highlight Curve -->
+            <path d="M74 22 C78 28 80 38 81 48" stroke="#485982" stroke-width="1.2" stroke-linecap="round" opacity="0.6" />
+            <!-- Dapper Feather Tucked in Band -->
+            <path d="M42 46 C40 34 45 22 48 18 C47 25 50 35 48 45 Z" fill="url(#featherGrad)" />
+            <path d="M44 46 L47 22" stroke="#FFF0BA" stroke-width="0.8" opacity="0.8" />
+            <!-- Gold Hatband (Ribbon) -->
+            <path d="M33.5 48 C48 45 72 45 86.5 48 L86.8 53.5 C72 50.5 48 50.5 33.2 53.5 Z" fill="url(#hatBandGrad)" />
+            <!-- Gold Hatband Buckle / Loop Accent -->
+            <rect x="42" y="47.5" width="5" height="6.5" rx="1" fill="#FFF8DB" stroke="#9A7B1C" stroke-width="0.8" />
+            <!-- Curved Brim with Gentleman Tilt -->
+            <path d="M8 58 C18 52 35 48 60 48 C85 48 104 53 114 60 C106 63 85 64.5 60 64.5 C35 64.5 15 63 8 58 Z" fill="url(#hatBrimGrad)" />
+            <!-- Brim Underside Shadow -->
+            <path d="M14 59 C32 63.5 60 64 88 62.5 C102 61 108 59.5 110 59 C102 62 82 64 60 64 C38 64 20 62 14 59 Z" fill="#04060A" opacity="0.8" />
+            <!-- Fine Gold Piping Along Brim Edge -->
+            <path d="M8 58 C18 52 35 48 60 48 C85 48 104 53 114 60" stroke="url(#hatTrimGrad)" stroke-width="1.6" stroke-linecap="round" />
+          </g>
+        </svg></span>G</span>entleman, Refined.</span></h1>
+        <p class="hero-sub reveal">A rapidly expanding, premium grooming brand offering turnkey salon setups with <span class="gold-text">Zero Franchise Fees</span> and high-margin profitability.</p>
+        <div class="hero-cta reveal">
+          <a href="#models" class="btn btn-glass-gold">Explore Investment Models</a>
+          <a href="#contact" class="btn btn-glass">Contact Partnership Team</a>
+        </div>
+        <div class="hero-stats reveal">
+          <div class="stat"><span class="stat-num">&#8377;0</span><span class="stat-label">Upfront Franchise Fee</span></div>
+          <div class="stat"><span class="stat-num">7</span><span class="stat-label">Investment Models</span></div>
+          <div class="stat"><span class="stat-num">&#8377;5,000</span><span class="stat-label">Starting Monthly Royalty</span></div>
+          <div class="stat"><span class="stat-num">100%</span><span class="stat-label">Turnkey Setup</span></div>
+        </div>
+      </div>
+      <a href="#about" class="scroll-cue" aria-label="Scroll to about"><span class="scroll-cue-line"></span></a>
+    </section>
+
+    <!-- Expanding Network Cities Marquee Ribbon -->
+    <div class="network-marquee-wrap" id="locations" aria-label="Our Expanding Network Across Tamil Nadu">
+      <div class="marquee-header">
+        <span class="marquee-tag">Live Presence &amp; Expansion</span>
+        <span class="marquee-title">25+ Prime Locations Across Tamil Nadu &middot; Active &amp; Upcoming</span>
+      </div>
+      <div class="marquee-track-container">
+        <div class="marquee-track">
+          <!-- Track Set 1 -->
+          <div class="city-pill"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Theni</span></div>
+          <div class="city-pill"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Periyakulam</span></div>
+          <div class="city-pill"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Devadanapatti</span></div>
+          <div class="city-pill"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Nilakottai</span></div>
+          <div class="city-pill"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Dindigul</span></div>
+          <div class="city-pill"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">SithaiyanKottai</span></div>
+          <div class="city-pill"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Pakkam, Thirunindravur</span></div>
+          <div class="city-pill"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Alapakkam</span></div>
+          <div class="city-pill"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Alandur</span><span class="city-badge process">On Process</span></div>
+          <div class="city-pill"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Vedasanthur</span><span class="city-badge process">On Process</span></div>
+          <div class="city-pill"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Pallapati</span></div>
+          <div class="city-pill"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Velayuthapalayam</span><span class="city-badge launch">Opening 12th Sep</span></div>
+          <div class="city-pill"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Paramathi</span></div>
+          <div class="city-pill"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Coimbatore</span></div>
+          <div class="city-pill"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Tirupur</span><span class="city-badge soon">Opening Soon</span></div>
+          <div class="city-pill"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Anthiyur</span><span class="city-badge soon">Opening Soon</span></div>
+          <div class="city-pill"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Chinnamannur</span><span class="city-badge launch">Opening 13th Sep</span></div>
+          <div class="city-pill"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Puliyangudi</span><span class="city-badge soon">Opening Soon</span></div>
+          <div class="city-pill"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Usilampatti</span><span class="city-badge soon">Opening Soon</span></div>
+          <div class="city-pill"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Melur (Madurai)</span></div>
+          <div class="city-pill"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Trichy</span></div>
+          <div class="city-pill"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Thindivanam</span></div>
+          <div class="city-pill"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Thuvarankurichi</span></div>
+          <div class="city-pill"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Puthanatham</span></div>
+          <div class="city-pill"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Manaparai</span></div>
+
+          <!-- Track Set 2 (Clone for Infinite Seamless Loop) -->
+          <div class="city-pill" aria-hidden="true"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Theni</span></div>
+          <div class="city-pill" aria-hidden="true"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Periyakulam</span></div>
+          <div class="city-pill" aria-hidden="true"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Devadanapatti</span></div>
+          <div class="city-pill" aria-hidden="true"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Nilakottai</span></div>
+          <div class="city-pill" aria-hidden="true"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Dindigul</span></div>
+          <div class="city-pill" aria-hidden="true"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">SithaiyanKottai</span></div>
+          <div class="city-pill" aria-hidden="true"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Pakkam, Thirunindravur</span></div>
+          <div class="city-pill" aria-hidden="true"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Alapakkam</span></div>
+          <div class="city-pill" aria-hidden="true"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Alandur</span><span class="city-badge process">On Process</span></div>
+          <div class="city-pill" aria-hidden="true"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Vedasanthur</span><span class="city-badge process">On Process</span></div>
+          <div class="city-pill" aria-hidden="true"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Pallapati</span></div>
+          <div class="city-pill" aria-hidden="true"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Velayuthapalayam</span><span class="city-badge launch">Opening 12th Sep</span></div>
+          <div class="city-pill" aria-hidden="true"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Paramathi</span></div>
+          <div class="city-pill" aria-hidden="true"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Coimbatore</span></div>
+          <div class="city-pill" aria-hidden="true"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Tirupur</span><span class="city-badge soon">Opening Soon</span></div>
+          <div class="city-pill" aria-hidden="true"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Anthiyur</span><span class="city-badge soon">Opening Soon</span></div>
+          <div class="city-pill" aria-hidden="true"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Chinnamannur</span><span class="city-badge launch">Opening 13th Sep</span></div>
+          <div class="city-pill" aria-hidden="true"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Puliyangudi</span><span class="city-badge soon">Opening Soon</span></div>
+          <div class="city-pill" aria-hidden="true"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Usilampatti</span><span class="city-badge soon">Opening Soon</span></div>
+          <div class="city-pill" aria-hidden="true"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Melur (Madurai)</span></div>
+          <div class="city-pill" aria-hidden="true"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Trichy</span></div>
+          <div class="city-pill" aria-hidden="true"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Thindivanam</span></div>
+          <div class="city-pill" aria-hidden="true"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Thuvarankurichi</span></div>
+          <div class="city-pill" aria-hidden="true"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Puthanatham</span></div>
+          <div class="city-pill" aria-hidden="true"><svg class="city-pin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="city-name">Manaparai</span></div>
+        </div>
+      </div>
+    </div>
+
+    <section class="section about" id="about">
+      <div class="section-inner">
+        <div class="about-grid">
+          <div class="about-copy reveal">
+            <p class="eyebrow">About Luxe Men Salon</p>
+            <h2 class="section-title">A Sanctuary for the<br /><em>Distinguished Man</em></h2>
+            <div class="rule"></div>
+            <p>Luxe Men Salon is positioned as more than a barbershop &mdash; a sanctuary for the distinguished man. A place where ritual replaces routine: precision cuts, hot towel shaves, and sophisticated, masculine environments crafted around one standard &mdash; excellence.</p>
+            <p>Behind the artistry sits a discipline most salons never master: strong unit economics. Every square foot is designed to work, every model engineered to profit. That is why we are not just growing &mdash; we are expanding with partners who share our obsession.</p>
+            <blockquote class="quote">&ldquo;We build salons that look like a decision and run like a guarantee.&rdquo;</blockquote>
+          </div>
+          <div class="about-pillars">
+            <div class="pillar reveal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 20V10l8-6 8 6v10" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 20v-6h4v6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <h3>Precision Cuts</h3>
+              <p>Master stylists, obsessively trained on the house standard.</p>
+            </div>
+            <div class="pillar reveal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 21s-7-4.6-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.4-9 9-9 9z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <h3>Hot Towel Shaves</h3>
+              <p>The signature ritual that keeps gentlemen returning.</p>
+            </div>
+            <div class="pillar reveal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 21h18M5 21V7l7-4 7 4v14" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 21v-6h6v6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <h3>Refined Environments</h3>
+              <p>Sophisticated, masculine spaces engineered for dwell time.</p>
+            </div>
+            <div class="pillar reveal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M21 12a9 9 0 1 1-2.6-6.4" stroke-linecap="round"/><path d="M21 3v6h-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <h3>Strong Unit Economics</h3>
+              <p>Every model built for margin, controlled cost, and payback.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section experience" id="experience">
+      <div class="section-inner">
+        <div class="section-head reveal">
+          <p class="eyebrow">The Experience</p>
+          <h2 class="section-title">Crafted for <em>Excellence</em></h2>
+          <p class="section-sub">Step inside a sanctuary where ritual replaces routine. Every Luxe Men Salon combines master craftsmanship, bespoke architecture, and private executive grooming.</p>
+        </div>
+        <div class="experience-grid">
+          <article class="exp-card reveal">
+            <div class="exp-img-wrap">
+              <img src="images/precision-cut.jpg" alt="Master Barber Precision Haircut and Styling" loading="lazy" />
+              <div class="exp-overlay"></div>
+              <span class="exp-badge">Master Styling</span>
+            </div>
+            <div class="exp-content">
+              <h3>Precision Cuts &amp; Haircraft</h3>
+              <p>Tailored cuts and texture styling engineered to each gentleman&rsquo;s profile, executed by master stylists trained obsessively to the house standard.</p>
+            </div>
+          </article>
+          <article class="exp-card reveal">
+            <div class="exp-img-wrap">
+              <img src="images/hot-towel.jpg" alt="Gentleman receiving traditional hot towel shave ritual" loading="lazy" />
+              <div class="exp-overlay"></div>
+              <span class="exp-badge">Signature Ritual</span>
+            </div>
+            <div class="exp-content">
+              <h3>Hot Towel Shave &amp; Beard Rituals</h3>
+              <p>Steamed herbal towels, warm lathering, and straight-razor precision that elevate daily maintenance into a restorative luxury ritual.</p>
+            </div>
+          </article>
+          <article class="exp-card reveal">
+            <div class="exp-img-wrap">
+              <img src="images/facial-suite.jpg" alt="VIP Facial and Spa Treatment Suite for Men" loading="lazy" />
+              <div class="exp-overlay"></div>
+              <span class="exp-badge">Private Suite</span>
+            </div>
+            <div class="exp-content">
+              <h3>Elite Facial &amp; Scalp Therapy</h3>
+              <p>Dedicated private treatment rooms offering rejuvenating facials, deep-conditioning scalp therapies, and executive wellness in tranquil seclusion.</p>
+            </div>
+          </article>
+          <article class="exp-card reveal">
+            <div class="exp-img-wrap">
+              <img src="images/hero-salon.jpg" alt="Turnkey Luxury Salon Architectural Setup" loading="lazy" />
+              <div class="exp-overlay"></div>
+              <span class="exp-badge">Turnkey Architecture</span>
+            </div>
+            <div class="exp-content">
+              <h3>Turnkey Signature Interiors</h3>
+              <p>Arched brass-framed vanity mirrors, dark timber paneling, and bespoke ergonomic chairs designed to captivate clients and maximize revenue per sq. ft.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section why" id="why">
+      <div class="section-inner">
+        <div class="section-head reveal">
+          <p class="eyebrow">The Opportunity</p>
+          <h2 class="section-title">Why Choose <em>Luxe?</em></h2>
+          <p class="section-sub">A pure partnership model, deliberately engineered to remove the barriers that keep great entrepreneurs from owning great businesses.</p>
+        </div>
+        <div class="why-grid">
+          <article class="card reveal">
+            <span class="card-index">01</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16.5 9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <h3>Zero Upfront Franchise Fee</h3>
+            <p>A pure partnership model without steep entry barriers. Your capital builds your salon, not our brand catalogue.</p>
+          </article>
+          <article class="card reveal">
+            <span class="card-index">02</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <h3>Complete Setup Provided</h3>
+            <p>Turnkey, ready-to-operate setup ensuring brand consistency from the first curtain pulled back to the last detail.</p>
+          </article>
+          <article class="card reveal">
+            <span class="card-index">03</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M12 1v22M17 5.5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <h3>Low Operational Royalty</h3>
+            <p>Predictable, fixed monthly fees so partners keep maximum profits &mdash; no surprise percentages at the end of the month.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section models" id="models">
+      <div class="section-inner">
+        <div class="section-head reveal">
+          <p class="eyebrow">Investment Models</p>
+          <h2 class="section-title">Seven Paths. <em>One Standard.</em></h2>
+          <p class="section-sub">From a focused two-chair Essential studio to the full-scale Unisex Luxe destination &mdash; compare, then choose the model that fits your capital and ambition.</p>
+        </div>
+        <div class="table-scroll reveal">
+          <table class="pricing-table">
+            <thead>
+              <tr>
+                <th>Investment Model</th>
+                <th>Size (Sq. Ft.)</th>
+                <th>Service Capacity</th>
+                <th>Total Investment</th>
+                <th>Monthly Royalty</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="model-name">The Essential</span></td>
+                <td>160 &ndash; 200</td>
+                <td>2 Stylist / 2 Seats</td>
+                <td><strong>&#8377;7 Lakhs</strong></td>
+                <td><span class="royalty">&#8377;5,000</span></td>
+              </tr>
+              <tr>
+                <td><span class="model-name">The Compact Standard</span></td>
+                <td>200 &ndash; 250</td>
+                <td>2 or 3 Stylist / 3 Seats</td>
+                <td><strong>&#8377;8.75 Lakhs</strong></td>
+                <td><span class="royalty">&#8377;5,000</span></td>
+              </tr>
+              <tr>
+                <td><span class="model-name">The Standard</span><span class="tag">Recommended</span></td>
+                <td>250 &ndash; 350</td>
+                <td>2 or 3 Stylist / 3 Seats</td>
+                <td><strong>&#8377;9.5 Lakhs</strong></td>
+                <td><span class="royalty">&#8377;5,000</span></td>
+              </tr>
+              <tr>
+                <td><span class="model-name">The Elite</span></td>
+                <td>350 &ndash; 400</td>
+                <td>4 Stylist / 4 Seats</td>
+                <td><strong>&#8377;13 Lakhs</strong></td>
+                <td><span class="royalty">&#8377;6,500</span></td>
+              </tr>
+              <tr>
+                <td><span class="model-name">Elite Plus</span><span class="tag">Facial Room</span></td>
+                <td>450 &ndash; 550</td>
+                <td>4 Stylist / 4 Seats + Facial Room</td>
+                <td><strong>&#8377;15 Lakhs</strong></td>
+                <td><span class="royalty">&#8377;7,000</span></td>
+              </tr>
+              <tr>
+                <td><span class="model-name">The Signature</span></td>
+                <td>550 &ndash; 600</td>
+                <td>4 Stylist / 4 Seats, Facial / Pedi / Mani</td>
+                <td><strong>&#8377;16.89 Lakhs</strong></td>
+                <td><span class="royalty">&#8377;7,000</span></td>
+              </tr>
+              <tr>
+                <td><span class="model-name">The Unisex Luxe</span></td>
+                <td>850 &ndash; 1000</td>
+                <td>4M + 2F Stylist (4 Male &amp; 2 Female seats)</td>
+                <td><strong>&#8377;26.91 Lakhs</strong></td>
+                <td><span class="royalty">&#8377;8,000</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note reveal">All models include turnkey setup, brand build-out, and operational guidance from day one.</p>
+      </div>
+    </section>
+
+    <section class="section testimonials" id="testimonials">
+      <div class="section-inner">
+        <div class="section-head reveal">
+          <p class="eyebrow">Reviews &amp; Testimonials</p>
+          <h2 class="section-title">WHAT OUR CLIENTS <em>SAY</em></h2>
+          <p class="section-sub">Trusted by entrepreneurs and multi-franchise partners</p>
+        </div>
+      </div>
+
+      <!-- Continuous Auto-Scrolling Reviews Marquee (Right to Left) -->
+      <div class="testimonials-marquee-wrap reveal" aria-label="Client Testimonials Scrolling List">
+        <div class="testimonials-track">
+
+          <!-- Set 1 (Original Reviews from Slide) -->
+          <article class="testimonial-card">
+            <div class="t-stars" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <p class="t-quote">&ldquo;The complete salon setup was handled professionally. The quality, support and execution gave me great confidence in the Luxe Men Salon brand.&rdquo;</p>
+            <footer class="t-author">
+              <div class="t-info">
+                <span class="t-author-name">Gokul</span>
+                <span class="t-author-role">Chennai</span>
+              </div>
+            </footer>
+          </article>
+
+          <article class="testimonial-card">
+            <div class="t-stars" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <p class="t-quote">&ldquo;The entire journey from planning to setup was smooth and well coordinated. I am very happy with the support and the final salon experience.&rdquo;</p>
+            <footer class="t-author">
+              <div class="t-info">
+                <span class="t-author-name">Kaja Moinudeen</span>
+                <span class="t-author-role">Thuvarankurichi</span>
+              </div>
+            </footer>
+          </article>
+
+          <article class="testimonial-card">
+            <div class="t-stars" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <p class="t-quote">&ldquo;Luxe Men Salon has given me a strong business platform and dependable support. Owning multiple franchises has been a rewarding experience.&rdquo;</p>
+            <footer class="t-author">
+              <div class="t-info">
+                <span class="t-author-name">Mohamed Sadiq</span>
+                <span class="t-author-role">Pallappatti &bull; 5 Franchise Owner</span>
+              </div>
+            </footer>
+          </article>
+
+          <article class="testimonial-card">
+            <div class="t-stars" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <p class="t-quote">&ldquo;The brand support and operational guidance have made expansion much easier. I am satisfied with the consistency and professionalism of the Luxe team.&rdquo;</p>
+            <footer class="t-author">
+              <div class="t-info">
+                <span class="t-author-name">Suresh</span>
+                <span class="t-author-role">Dindigul &bull; 3 Franchise Owner</span>
+              </div>
+            </footer>
+          </article>
+
+          <!-- Set 2 (Cloned for Infinite Seamless Loop) -->
+          <article class="testimonial-card" aria-hidden="true">
+            <div class="t-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <p class="t-quote">&ldquo;The complete salon setup was handled professionally. The quality, support and execution gave me great confidence in the Luxe Men Salon brand.&rdquo;</p>
+            <footer class="t-author">
+              <div class="t-info">
+                <span class="t-author-name">Gokul</span>
+                <span class="t-author-role">Chennai</span>
+              </div>
+            </footer>
+          </article>
+
+          <article class="testimonial-card" aria-hidden="true">
+            <div class="t-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <p class="t-quote">&ldquo;The entire journey from planning to setup was smooth and well coordinated. I am very happy with the support and the final salon experience.&rdquo;</p>
+            <footer class="t-author">
+              <div class="t-info">
+                <span class="t-author-name">Kaja Moinudeen</span>
+                <span class="t-author-role">Thuvarankurichi</span>
+              </div>
+            </footer>
+          </article>
+
+          <article class="testimonial-card" aria-hidden="true">
+            <div class="t-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <p class="t-quote">&ldquo;Luxe Men Salon has given me a strong business platform and dependable support. Owning multiple franchises has been a rewarding experience.&rdquo;</p>
+            <footer class="t-author">
+              <div class="t-info">
+                <span class="t-author-name">Mohamed Sadiq</span>
+                <span class="t-author-role">Pallappatti &bull; 5 Franchise Owner</span>
+              </div>
+            </footer>
+          </article>
+
+          <article class="testimonial-card" aria-hidden="true">
+            <div class="t-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <p class="t-quote">&ldquo;The brand support and operational guidance have made expansion much easier. I am satisfied with the consistency and professionalism of the Luxe team.&rdquo;</p>
+            <footer class="t-author">
+              <div class="t-info">
+                <span class="t-author-name">Suresh</span>
+                <span class="t-author-role">Dindigul &bull; 3 Franchise Owner</span>
+              </div>
+            </footer>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Dedicated Social Strip -->
+    <section class="insta-strip-section" id="social-connect">
+      <div class="section-inner">
+        <div class="insta-strip reveal">
+          <div class="insta-strip-inner">
+            <div class="insta-strip-left">
+              <div class="insta-motto-crest">
+                <span class="motto-gold-scissors">&#9986;</span>
+              </div>
+              <div class="insta-strip-info">
+                <span class="social-strip-eyebrow">CONNECT WITH LUXE</span>
+                <h2 class="social-strip-title">Follow &amp; <em>Message Directly</em></h2>
+                <p class="social-strip-sub">Follow our master grooming artistry on Instagram, or tap WhatsApp to message us directly for appointments and franchise opportunities.</p>
+              </div>
+            </div>
+            <div class="social-action-group">
+              <!-- Instagram Icon Button (Redirects to Instagram) -->
+              <a href="https://www.instagram.com/luxesalonz?utm_source=ig_web_button_share_sheet&stkn=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" class="social-btn social-btn-insta" aria-label="Visit Luxe Men Salon on Instagram" title="Open Instagram @luxesalonz">
+                <div class="social-btn-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                </div>
+                <div class="social-btn-meta">
+                  <span class="social-btn-name">Instagram</span>
+                  <span class="social-btn-handle">@luxesalonz &rarr;</span>
+                </div>
+              </a>
+
+              <!-- WhatsApp Icon Button (Messages directly on WhatsApp) -->
+              <a href="https://wa.me/919626458516?text=Hi%20Luxe%20Men%20Salon%2C%20I%20would%20like%20to%20message%20you%20regarding%20appointments%20and%20franchise%20inquiries." target="_blank" rel="noopener noreferrer" class="social-btn social-btn-wa" aria-label="Message Luxe Men Salon on WhatsApp" title="Message on WhatsApp">
+                <div class="social-btn-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.24 8.24-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.196 8.196 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24zm4.52 11.53c-.25-.12-1.47-.72-1.7-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.15.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1 0 1.24.9 2.44 1.03 2.61.12.17 1.77 2.71 4.3 3.8.6.26 1.07.41 1.44.53.61.19 1.16.17 1.6.1.49-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.15-1.18-.07-.12-.23-.19-.48-.31z"/></svg>
+                </div>
+                <div class="social-btn-meta">
+                  <span class="social-btn-name">WhatsApp</span>
+                  <span class="social-btn-handle">Message Us &rarr;</span>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section contact" id="contact">
+      <div class="section-inner">
+        <div class="section-head reveal">
+          <p class="eyebrow">Begin the Conversation</p>
+          <h2 class="section-title">Let&rsquo;s Build Your <em>Legacy</em></h2>
+          <p class="section-sub">Tell us where you want to open and which model fits your ambition. The partnership team responds within 24 hours.</p>
+        </div>
+        <div class="contact-grid">
+          <div class="contact-info info-card reveal" id="infoCard">
+            <!-- Interactive Glitter Backdrop & Sparkle System -->
+            <div class="glitter-backdrop" aria-hidden="true">
+              <div class="glitter-shimmer-sweep"></div>
+              <div class="glitter-sparkles-grid">
+                <span class="glitter-star gs-1" style="--d: 0.1s; --x: 12%; --y: 18%;">✦</span>
+                <span class="glitter-star gs-2" style="--d: 0.5s; --x: 85%; --y: 14%;">✨</span>
+                <span class="glitter-star gs-3" style="--d: 0.9s; --x: 75%; --y: 38%;">⋆</span>
+                <span class="glitter-star gs-4" style="--d: 0.3s; --x: 22%; --y: 52%;">✧</span>
+                <span class="glitter-star gs-5" style="--d: 0.7s; --x: 88%; --y: 68%;">✦</span>
+                <span class="glitter-star gs-6" style="--d: 1.1s; --x: 14%; --y: 82%;">✨</span>
+                <span class="glitter-star gs-7" style="--d: 0.4s; --x: 62%; --y: 90%;">⋆</span>
+                <span class="glitter-star gs-8" style="--d: 0.8s; --x: 38%; --y: 28%;">✧</span>
+              </div>
+              <canvas class="glitter-canvas" id="infoCardGlitterCanvas"></canvas>
+            </div>
+
+            <!-- Card Header Badge & Title -->
+            <div class="info-card-header">
+              <div class="info-card-badge">
+                <span class="badge-sparkle">✨</span>
+                <span>DIRECT HEADQUARTERS</span>
+              </div>
+              <h3 class="info-card-title">Partnership Concierge</h3>
+            </div>
+
+            <p>Whether you are opening your first salon or scaling your fourth, Luxe Men Salon supports every step &mdash; from site selection to the ribbon cut.</p>
+            <div class="contact-line">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.4 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <div><span class="cl-label">Phone</span><a class="cl-value" href="tel:+919626458516">+91 96264 58516</a></div>
+            </div>
+            <div class="contact-line">
+              <svg viewBox="0 0 24 24" fill="currentColor" style="color:#25D366;"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.24 8.24-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.196 8.196 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24zm4.52 11.53c-.25-.12-1.47-.72-1.7-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.15.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1 0 1.24.9 2.44 1.03 2.61.12.17 1.77 2.71 4.3 3.8.6.26 1.07.41 1.44.53.61.19 1.16.17 1.6.1.49-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.15-1.18-.07-.12-.23-.19-.48-.31z"/></svg>
+              <div><span class="cl-label">WhatsApp</span><a class="cl-value" href="https://wa.me/919626458516?text=Hi%20Luxe%20Men%20Salon%2C%20I%20am%20interested%20in%20a%20franchise%20partnership." target="_blank" rel="noopener noreferrer">Message on WhatsApp &rarr;</a></div>
+            </div>
+            <div class="contact-line">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <div><span class="cl-label">Email</span><a class="cl-value" href="mailto:luxemensalon60@gmail.com">luxemensalon60@gmail.com</a></div>
+            </div>
+            <div class="contact-line">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:#E1306C;"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+              <div><span class="cl-label">Instagram</span><a class="cl-value" href="https://www.instagram.com/luxesalonz?utm_source=ig_web_button_share_sheet&stkn=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer">@luxesalonz &rarr;</a></div>
+            </div>
+            <div class="contact-line">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <div><span class="cl-label">Response Time</span><span class="cl-value">Within 24 hours</span></div>
+            </div>
+          </div>
+
+          <form class="form-card reveal" id="contactForm">
+            <div class="form-row">
+              <div class="field"><label for="name">Full Name</label><input id="name" name="name" type="text" required placeholder="Your full name" /></div>
+              <div class="field"><label for="phone">Phone</label><input id="phone" name="phone" type="tel" required placeholder="+91 ....." /></div>
+            </div>
+            <div class="form-row">
+              <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" placeholder="you@example.com" /></div>
+              <div class="field">
+                <label for="city">Target City / Location</label>
+                <input id="city" name="city" type="text" list="citiesList" placeholder="e.g. Coimbatore, Theni, Trichy..." autocomplete="off" />
+                <datalist id="citiesList">
+                  <option value="Theni"></option>
+                  <option value="Periyakulam"></option>
+                  <option value="Devadanapatti"></option>
+                  <option value="Nilakottai"></option>
+                  <option value="Dindigul"></option>
+                  <option value="SithaiyanKottai"></option>
+                  <option value="Pakkam, Thirunindravur"></option>
+                  <option value="Alapakkam"></option>
+                  <option value="Alandur"></option>
+                  <option value="Vedasanthur"></option>
+                  <option value="Pallapati"></option>
+                  <option value="Velayuthapalayam"></option>
+                  <option value="Paramathi"></option>
+                  <option value="Coimbatore"></option>
+                  <option value="Tirupur"></option>
+                  <option value="Anthiyur"></option>
+                  <option value="Chinnamannur"></option>
+                  <option value="Puliyangudi"></option>
+                  <option value="Usilampatti"></option>
+                  <option value="Melur (Madurai)"></option>
+                  <option value="Trichy"></option>
+                  <option value="Thindivanam"></option>
+                  <option value="Thuvarankurichi"></option>
+                  <option value="Puthanatham"></option>
+                  <option value="Manaparai"></option>
+                </datalist>
+              </div>
+            </div>
+            <div class="field"><label for="model">Investment Model</label>
+              <select id="model" name="model">
+                <option value="The Essential">The Essential</option>
+                <option value="The Compact Standard">The Compact Standard</option>
+                <option value="The Standard">The Standard</option>
+                <option value="The Elite">The Elite</option>
+                <option value="Elite Plus">Elite Plus</option>
+                <option value="The Signature">The Signature</option>
+                <option value="The Unisex Luxe">The Unisex Luxe</option>
+                <option value="Not sure yet">Not sure yet &mdash; advise me</option>
+              </select>
+            </div>
+            <div class="field"><label for="message">Message</label><textarea id="message" name="message" placeholder="Tell us about your location, timeline, or questions..."></textarea></div>
+            <button type="submit" class="btn btn-gold" style="width:100%;">Request Partnership Call</button>
+            <div class="form-status" id="formStatus" role="status"></div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div>
+          <a href="#home" class="brand" style="margin-bottom:20px;">
+            <img src="images/logo.png" alt="Luxe Men Salon Logo" class="brand-logo" />
+            <div class="brand-text">
+              <span class="brand-name">LUXE&nbsp;MEN&nbsp;SALON</span>
+              <span class="brand-caption">Love Is In The Hair</span>
+            </div>
+          </a>
+          <p>The Art of the Gentleman, Refined. A rapidly expanding premium grooming brand &mdash; turnkey setups, zero franchise fees, high-margin profitability.</p>
+        </div>
+        <div>
+          <h4>Explore</h4>
+          <ul class="footer-links">
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#experience">The Experience</a></li>
+            <li><a href="#why">Why Us</a></li>
+            <li><a href="#models">Investment Models</a></li>
+            <li><a href="#testimonials">Testimonials</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contact &amp; Social</h4>
+          <ul class="footer-links">
+            <li><a href="tel:+919626458516">+91 96264 58516</a></li>
+            <li><a href="mailto:luxemensalon60@gmail.com">luxemensalon60@gmail.com</a></li>
+            <li class="footer-social-icons-row">
+              <a href="https://www.instagram.com/luxesalonz?utm_source=ig_web_button_share_sheet&stkn=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" class="footer-icon-pill insta-pill" title="Instagram @luxesalonz">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                <span>Instagram</span>
+              </a>
+              <a href="https://wa.me/919626458516?text=Hi%20Luxe%20Men%20Salon%2C%20I%20would%20like%20to%20message%20you%20regarding%20appointments%20and%20franchise%20inquiries." target="_blank" rel="noopener noreferrer" class="footer-icon-pill wa-pill" title="WhatsApp Message">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.24 8.24-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.196 8.196 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24zm4.52 11.53c-.25-.12-1.47-.72-1.7-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.15.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1 0 1.24.9 2.44 1.03 2.61.12.17 1.77 2.71 4.3 3.8.6.26 1.07.41 1.44.53.61.19 1.16.17 1.6.1.49-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.15-1.18-.07-.12-.23-.19-.48-.31z"/></svg>
+                <span>WhatsApp</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-bottom-inner">
+        <span>&copy; <span id="year"></span> Luxe Men Salon. All rights reserved.</span>
+        <span>Partnership inquiries: +91 96264 58516</span>
+        <button type="button" class="btn-replay-entrance" id="replayEntranceBtn" aria-label="Replay entrance animation">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+          Replay Entrance Doors
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating WhatsApp & Instagram Quick-Connect -->
+  <div class="floating-quick-connect" id="quickConnect">
+    <a href="https://wa.me/919626458516?text=Hi%20Luxe%20Men%20Salon%2C%20I%20would%20like%20to%20message%20you%20regarding%20appointments%20and%20franchise%20inquiries." target="_blank" rel="noopener noreferrer" class="quick-btn quick-wa" aria-label="Chat on WhatsApp" title="Message on WhatsApp">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.24 8.24-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.196 8.196 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24zm4.52 11.53c-.25-.12-1.47-.72-1.7-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.15.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1 0 1.24.9 2.44 1.03 2.61.12.17 1.77 2.71 4.3 3.8.6.26 1.07.41 1.44.53.61.19 1.16.17 1.6.1.49-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.15-1.18-.07-.12-.23-.19-.48-.31z"/></svg>
+      <span class="quick-tooltip">Message on WhatsApp</span>
+    </a>
+    <a href="https://www.instagram.com/luxesalonz?utm_source=ig_web_button_share_sheet&stkn=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" class="quick-btn quick-insta" aria-label="Visit Instagram" title="Open Instagram">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      <span class="quick-tooltip">Instagram @luxesalonz</span>
+    </a>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="none">
+  <!-- Snipping action glint at the tip of blade -->
+  <path d="M2 2L4 0M2 2L0 4M2 2L5 3M2 2L3 5" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round" />
+  <circle cx="2" cy="2" r="1.2" fill="#FFFFFF" />
+
+  <!-- Outer Dark Shadow/Border for maximum contrast on any background -->
+  <g stroke="#05070B" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Blade 1 -->
+    <path d="M2 2L12 12M12 12L17 17M17 17C17 17 18 19.5 20 19.5C22.2 19.5 24 17.7 24 15.5C24 13.3 22.2 11.5 20 11.5C18.5 11.5 17.5 12.5 17 13" />
+    <!-- Blade 2 (slightly tighter cut) -->
+    <path d="M4 1L12 12M12 12L14 15M14 15C14 15 12 17.5 12 19.5C12 22 13.8 24 16 24C18.2 24 20 22 20 19.5C20 18 19 16.5 17.5 16" />
+    <!-- Finger Tang -->
+    <path d="M24 15.5C25.5 15 27 16 27 17" />
+  </g>
+
+  <!-- Glowing Gold Scissors on Interactive Elements -->
+  <g stroke="url(#goldGlowGrad)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Blade 1 -->
+    <path d="M2 2L12 12" stroke="#FFFFFF" stroke-width="2.4" />
+    <path d="M12 12L17 17" stroke="#F5E6B8" stroke-width="2.2" />
+    <circle cx="20.5" cy="15.5" r="3.5" stroke="#FFE899" stroke-width="2" fill="rgba(212,175,55,0.45)" />
+    <!-- Finger rest / tang -->
+    <path d="M24 15.5C25.5 15 27 16 27 17" stroke="#FFF2CC" stroke-width="1.8" />
+
+    <!-- Blade 2 -->
+    <path d="M4 1L12 12" stroke="#FFF5D6" stroke-width="2.2" />
+    <circle cx="16" cy="20" r="3.5" stroke="#FFE899" stroke-width="2" fill="rgba(212,175,55,0.45)" />
+  </g>
+
+  <!-- Pivot Screw with Diamond Glint -->
+  <circle cx="12" cy="12" r="2.2" fill="#FFFFFF" stroke="#D4AF37" stroke-width="1" />
+  <circle cx="12" cy="12" r="0.8" fill="#0B0F19" />
+
+  <defs>
+    <linearGradient id="goldGlowGrad" x1="2" y1="2" x2="26" y2="26" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="35%" stop-color="#FFF2CC" />
+      <stop offset="70%" stop-color="#E9CE8A" />
+      <stop offset="100%" stop-color="#D4AF37" />
+    </linearGradient>
+  </defs>
+</svg>
