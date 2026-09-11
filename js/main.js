@@ -522,3 +522,82 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   window.addEventListener("mousedown", () => document.body.classList.add("scissor-cutting"));
   window.addEventListener("mouseup", () => document.body.classList.remove("scissor-cutting"));
 })();
+
+/* ==========================================================================
+   Stationary Scissor Cursor Gold Shine Engine
+   Shines like brilliant gold when the cursor is NOT moving,
+   and stops immediately the moment the cursor moves.
+   ========================================================================== */
+(function scissorCursorGoldShine() {
+  // Only activate on devices that support hover / fine pointers
+  if (window.matchMedia && !window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    return;
+  }
+
+  const shineEl = document.getElementById("cursorGoldShine");
+  if (!shineEl) return;
+
+  let idleTimer = null;
+  let lastX = -999;
+  let lastY = -999;
+  const IDLE_DELAY = 120; // 120ms of no movement triggers the golden shine
+
+  function stopShine() {
+    shineEl.classList.remove("is-shining");
+  }
+
+  function startShine() {
+    if (lastX >= 0 && lastY >= 0) {
+      shineEl.classList.add("is-shining");
+    }
+  }
+
+  function updatePosition(x, y) {
+    shineEl.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+  }
+
+  function onMouseMove(e) {
+    const x = e.clientX;
+    const y = e.clientY;
+
+    // Check if cursor actually moved position
+    if (x === lastX && y === lastY) return;
+
+    lastX = x;
+    lastY = y;
+
+    // Instantly stop the shine when moving
+    stopShine();
+
+    // Position shine element directly at cursor coordinates
+    updatePosition(x, y);
+
+    // Reset idle timer
+    if (idleTimer) clearTimeout(idleTimer);
+
+    // When the cursor is stationary (not moving), shine like gold!
+    idleTimer = setTimeout(() => {
+      startShine();
+    }, IDLE_DELAY);
+  }
+
+  function onMouseLeave() {
+    if (idleTimer) clearTimeout(idleTimer);
+    stopShine();
+    lastX = -999;
+    lastY = -999;
+  }
+
+  // Bind mouse and window events
+  document.addEventListener("mousemove", onMouseMove, { passive: true });
+  document.addEventListener("mouseleave", onMouseLeave, { passive: true });
+  window.addEventListener("blur", onMouseLeave, { passive: true });
+  window.addEventListener("scroll", () => {
+    // When scrolling with wheel/trackpad, also pause shine until settled
+    stopShine();
+    if (idleTimer) clearTimeout(idleTimer);
+    if (lastX >= 0 && lastY >= 0) {
+      idleTimer = setTimeout(startShine, IDLE_DELAY);
+    }
+  }, { passive: true });
+})();
