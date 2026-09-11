@@ -263,20 +263,189 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 })();
 
-(function cinematicEntrance() {
+/* ==========================================================================
+   Ceremonial Grand Opening Red Ribbon Cutting & Door Reveal Engine
+   ========================================================================== */
+(function ceremonialRibbonEntrance() {
   const portal = document.getElementById("mallPortal");
   if (!portal) return;
 
+  const ribbonWrap = document.getElementById("ceremonialRibbonWrap");
+  const bowCenter = document.getElementById("ribbonBowCenter");
+  const cutBtn = document.getElementById("portalCutBtn") || document.getElementById("portalSkipBtn");
+  const statusText = document.getElementById("portalStatusText");
+  const confettiCanvas = document.getElementById("ribbonConfettiCanvas");
+  const replayBtn = document.getElementById("replayEntranceBtn");
+
+  let isCut = false;
   let isOpening = false;
-  let autoTimer = null;
+  let animFrameId = null;
+
+  // Synthesize realistic scissor snip & shearing silk cloth audio
+  function playClothCutAudio() {
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return;
+      const ctx = new AudioContext();
+      if (ctx.state === "suspended") {
+        ctx.resume();
+      }
+
+      const now = ctx.currentTime;
+
+      // 1. High-frequency metallic scissor blades sliding & snap
+      const osc = ctx.createOscillator();
+      const oscGain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(3200, now);
+      osc.frequency.exponentialRampToValueAtTime(700, now + 0.08);
+
+      oscGain.gain.setValueAtTime(0.2, now);
+      oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+
+      osc.connect(oscGain);
+      oscGain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.1);
+
+      // 2. Realistic Silk Fabric Shearing / Tearing Sound (Filtered noise burst)
+      const bufferSize = Math.floor(ctx.sampleRate * 0.22);
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+      }
+
+      const noise = ctx.createBufferSource();
+      noise.buffer = buffer;
+
+      // Bandpass filter centered at fabric shearing frequency
+      const filter = ctx.createBiquadFilter();
+      filter.type = "bandpass";
+      filter.frequency.setValueAtTime(1500, now);
+      filter.frequency.linearRampToValueAtTime(800, now + 0.18);
+      filter.Q.setValueAtTime(1.8, now);
+
+      const noiseGain = ctx.createGain();
+      noiseGain.gain.setValueAtTime(0.38, now);
+      noiseGain.gain.exponentialRampToValueAtTime(0.002, now + 0.22);
+
+      noise.connect(filter);
+      filter.connect(noiseGain);
+      noiseGain.connect(ctx.destination);
+
+      noise.start(now);
+      noise.stop(now + 0.23);
+    } catch (e) {
+      // Audio autoplay policy or browser restriction
+    }
+  }
+
+  // Realistic Confetti & Silk Thread Fiber Explosion Engine
+  function launchConfettiBurst() {
+    if (!confettiCanvas) return;
+    const ctx = confettiCanvas.getContext("2d");
+    if (!ctx) return;
+
+    const rect = confettiCanvas.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    confettiCanvas.width = rect.width * dpr;
+    confettiCanvas.height = rect.height * dpr;
+
+    const originX = (confettiCanvas.width / 2);
+    const originY = (confettiCanvas.height / 2);
+
+    const colors = [
+      "#D4AF37", "#FFDF73", "#FFF3BD", "#E9CE8A", // Luxury Golds
+      "#F52C46", "#C90E25", "#8E0013", "#5C000B", // Royal Crimson Silks
+      "#FFFFFF", "#FFF9E6"                         // Sparkle White
+    ];
+
+    const particles = [];
+    const count = 160;
+
+    for (let i = 0; i < count; i++) {
+      const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.9;
+      const speed = Math.random() * 10 + 4;
+      const randType = Math.random();
+
+      particles.push({
+        x: originX,
+        y: originY,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - Math.random() * 5,
+        size: Math.random() * 8 + 4,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        rotation: Math.random() * 360,
+        rotSpeed: (Math.random() - 0.5) * 14,
+        alpha: 1,
+        decay: Math.random() * 0.014 + 0.009,
+        gravity: 0.24,
+        isRibbonStrip: randType < 0.45,
+        isSilkFiber: randType >= 0.45 && randType < 0.75
+      });
+    }
+
+    if (animFrameId) cancelAnimationFrame(animFrameId);
+
+    function renderConfetti() {
+      ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      let activeCount = 0;
+
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        if (p.alpha <= 0.01) continue;
+        activeCount++;
+
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += p.gravity;
+        p.vx *= 0.982;
+        p.rotation += p.rotSpeed;
+        p.alpha -= p.decay;
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate((p.rotation * Math.PI) / 180);
+        ctx.globalAlpha = Math.max(0, p.alpha);
+        ctx.fillStyle = p.color;
+        ctx.strokeStyle = p.color;
+
+        if (p.isRibbonStrip) {
+          // Satin cloth ribbon curl strip
+          ctx.fillRect(-p.size * 0.8, -p.size * 0.28, p.size * 1.8, p.size * 0.56);
+        } else if (p.isSilkFiber) {
+          // Severed silk thread fiber strand
+          ctx.lineWidth = 1.2;
+          ctx.beginPath();
+          ctx.moveTo(-p.size, 0);
+          ctx.quadraticCurveTo(0, p.size * 0.4, p.size, 0);
+          ctx.stroke();
+        } else {
+          // Gold sparkle diamond / sequin star
+          ctx.beginPath();
+          ctx.arc(0, 0, p.size * 0.48, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+
+      if (activeCount > 0) {
+        animFrameId = requestAnimationFrame(renderConfetti);
+      } else {
+        ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      }
+    }
+
+    renderConfetti();
+  }
 
   const openDoors = () => {
     if (isOpening) return;
     isOpening = true;
-    clearTimeout(autoTimer);
     portal.classList.add("opening");
 
-    // After door sliding animation finishes, unlock page and hide portal
+    // After sliding doors finish parting, unlock page scroll and reveal sanctuary
     setTimeout(() => {
       portal.classList.add("doors-opened");
       document.body.classList.remove("portal-locked");
@@ -284,36 +453,102 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
     }, 1600);
   };
 
+  // Perform Ribbon Cut Animation & Trigger Door Opening
+  const performRibbonCut = () => {
+    if (isCut) return;
+    isCut = true;
+
+    // Tactile scissor snip feedback & realistic shearing audio
+    document.body.classList.add("scissor-cutting");
+    playClothCutAudio();
+    setTimeout(() => document.body.classList.remove("scissor-cutting"), 350);
+
+    // Visual cut state on ribbon
+    if (ribbonWrap) {
+      ribbonWrap.classList.add("ribbon-cut");
+    }
+
+    // Update status text
+    if (statusText) {
+      statusText.innerHTML = '<span class="portal-status-dot"></span>✂ Ribbon Inaugurated! Opening the Sanctuary Doors...';
+    }
+
+    if (cutBtn) {
+      cutBtn.style.opacity = "0";
+      cutBtn.style.pointerEvents = "none";
+    }
+
+    // Launch celebratory confetti & severed silk fibers
+    launchConfettiBurst();
+
+    // After dramatic cut pause (450ms), automatically slide open the Luxe Salon doors
+    setTimeout(() => {
+      openDoors();
+    }, 450);
+  };
+
   // Lock scrolling during entrance intro
   document.body.classList.add("portal-locked");
 
-  // Automatically slide open like shopping mall automatic sensor doors
-  autoTimer = setTimeout(openDoors, 1400);
-
-  // Allow clicking anywhere on the portal to slide open immediately
-  portal.addEventListener("click", () => {
-    openDoors();
-  });
-
-  const skipBtn = document.getElementById("portalSkipBtn");
-  if (skipBtn) {
-    skipBtn.addEventListener("click", (e) => {
+  // Clicking on center bow or ribbon cuts the ribbon
+  if (bowCenter) {
+    bowCenter.addEventListener("click", (e) => {
       e.stopPropagation();
-      openDoors();
+      performRibbonCut();
     });
   }
 
-  // Replay entrance handler
-  const replayBtn = document.getElementById("replayEntranceBtn");
+  if (ribbonWrap) {
+    ribbonWrap.addEventListener("click", (e) => {
+      e.stopPropagation();
+      performRibbonCut();
+    });
+
+    ribbonWrap.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        performRibbonCut();
+      }
+    });
+  }
+
+  // Action button also cuts ribbon
+  if (cutBtn) {
+    cutBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      performRibbonCut();
+    });
+  }
+
+  // Replay entrance handler (resets ribbon, doors, and status)
   if (replayBtn) {
     replayBtn.addEventListener("click", (e) => {
       e.preventDefault();
-      clearTimeout(autoTimer);
+      if (animFrameId) cancelAnimationFrame(animFrameId);
+      if (confettiCanvas) {
+        const ctx = confettiCanvas.getContext("2d");
+        if (ctx) ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      }
+
+      isCut = false;
+      isOpening = false;
+
+      if (ribbonWrap) {
+        ribbonWrap.classList.remove("ribbon-cut");
+      }
+
+      if (cutBtn) {
+        cutBtn.style.opacity = "1";
+        cutBtn.style.pointerEvents = "auto";
+      }
+
+      if (statusText) {
+        statusText.innerHTML = '<span class="portal-status-dot"></span>Click the Red Ribbon with your Scissors to Inaugurate&hellip;';
+      }
+
       portal.classList.remove("doors-opened", "opening");
       document.body.classList.add("portal-locked");
       window.scrollTo({ top: 0, behavior: "instant" });
-      isOpening = false;
-      autoTimer = setTimeout(openDoors, 1600);
     });
   }
 })();
@@ -600,4 +835,41 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
       idleTimer = setTimeout(startShine, IDLE_DELAY);
     }
   }, { passive: true });
+})();
+
+/* ==========================================================================
+   Futuristic Layered Typography Parallax Controller
+   ========================================================================== */
+(function initFuturisticHeadingParallax() {
+  const modules = document.querySelectorAll(".futuristic-heading-module");
+  if (!modules.length) return;
+
+  modules.forEach((mod) => {
+    const card = mod.querySelector(".glass-backdrop-card");
+    if (!card) return;
+
+    mod.addEventListener("pointermove", (e) => {
+      const rect = mod.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+
+      const rotateX = ((y - centerY) / centerY) * -5.5;
+      const rotateY = ((x - centerX) / centerX) * 5.5;
+
+      card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateZ(4px)`;
+
+      const pctX = (x / rect.width) * 100;
+      const pctY = (y / rect.height) * 100;
+      card.style.setProperty("--mouse-x", `${pctX.toFixed(1)}%`);
+      card.style.setProperty("--mouse-y", `${pctY.toFixed(1)}%`);
+    });
+
+    mod.addEventListener("pointerleave", () => {
+      card.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)";
+      card.style.setProperty("--mouse-x", "50%");
+      card.style.setProperty("--mouse-y", "50%");
+    });
+  });
 })();
