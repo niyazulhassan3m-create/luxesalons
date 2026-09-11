@@ -956,74 +956,343 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 .about-copy p { color: var(--muted); font-weight: 300; margin-bottom: 20px; font-size: 16.5px; }
 .quote { display: block; margin-top: 8px; font-family: var(--font-display); font-size: 20px; font-style: italic; color: var(--gold-light); border-left: 1px solid var(--line); padding-left: 22px; }
 
-/* Brand Leadership Showcase (Founder & Co-Ordinator) */
-.brand-leadership {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
-  margin-top: 28px;
-  padding-top: 22px;
-  border-top: 1px solid rgba(212, 175, 55, 0.22);
+/* ==========================================================================
+   Executive Leadership & Direction Section
+   Bespoke luxury showcase for Founder of Brand & Brand Co-Ordinator
+   ========================================================================== */
+.leadership-section {
+  background: radial-gradient(circle at 50% 18%, rgba(212, 175, 55, 0.08) 0%, transparent 60%),
+              linear-gradient(180deg, #0B0F19 0%, #0E1422 50%, #0B0F19 100%);
+  position: relative;
+  overflow: hidden;
 }
 
-.leader-card {
+.leadership-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.4), transparent);
+}
+
+/* Leadership Philosophy Card */
+.leadership-philosophy-card {
   display: flex;
-  align-items: center;
-  gap: 13px;
-  background: rgba(17, 23, 40, 0.7);
-  border: 1px solid rgba(212, 175, 55, 0.25);
-  border-radius: 12px;
-  padding: 12px 16px;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transition: transform 0.3s ease, border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+  align-items: flex-start;
+  gap: 28px;
+  background: rgba(17, 23, 40, 0.75);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 20px;
+  padding: 36px 42px;
+  margin-bottom: 56px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  position: relative;
+  overflow: hidden;
 }
 
-.leader-card:hover {
-  background: rgba(21, 28, 48, 0.88);
-  border-color: rgba(212, 175, 55, 0.6);
-  transform: translateY(-3px);
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45), 0 0 16px rgba(212, 175, 55, 0.18);
+.leadership-philosophy-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #D4AF37, #FFF2CC, #D4AF37, transparent);
 }
 
-.leader-icon {
-  width: 38px;
-  height: 38px;
-  min-width: 38px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.05));
-  border: 1px solid rgba(212, 175, 55, 0.38);
+.philosophy-crest {
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.25), rgba(212, 175, 55, 0.05));
+  border: 1.5px solid rgba(212, 175, 55, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--gold);
+  box-shadow: 0 0 24px rgba(212, 175, 55, 0.25);
 }
 
-.leader-info {
+.philosophy-scissors {
+  font-size: 24px;
+  color: var(--gold-light);
+  transform: rotate(-45deg);
+}
+
+.philosophy-eyebrow {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--gold-light);
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.philosophy-quote {
+  font-family: var(--font-display);
+  font-size: clamp(17px, 1.8vw, 21px);
+  line-height: 1.65;
+  color: #EDEAE0;
+  font-style: italic;
+  margin-bottom: 14px;
+}
+
+.philosophy-author {
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Two Dedicated Executive Spotlight Profiles */
+.leadership-spotlight-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 36px;
+  margin-bottom: 50px;
+}
+
+.leader-spotlight-card {
+  position: relative;
+  background: rgba(14, 20, 34, 0.85);
+  border: 1px solid rgba(212, 175, 55, 0.32);
+  border-radius: 22px;
+  padding: 40px 36px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.4s ease,
+              box-shadow 0.4s ease;
+  overflow: hidden;
 }
 
-.leader-role {
-  font-size: 0.68rem;
-  letter-spacing: 0.12em;
+.leader-spotlight-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(212, 175, 55, 0.85);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.75), 0 0 35px rgba(212, 175, 55, 0.22);
+}
+
+.leader-card-glow {
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.15), transparent 70%);
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.leader-spotlight-card:hover .leader-card-glow {
+  transform: scale(1.2);
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.25), transparent 70%);
+}
+
+.leader-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+/* Prestige Badges */
+.leader-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 15px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.founder-pill {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.28), rgba(212, 175, 55, 0.08));
+  border: 1px solid rgba(212, 175, 55, 0.65);
+  color: #FFF5D6;
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.25);
+}
+
+.coordinator-pill {
+  background: linear-gradient(135deg, rgba(233, 206, 138, 0.24), rgba(233, 206, 138, 0.06));
+  border: 1px solid rgba(233, 206, 138, 0.6);
+  color: #FFF2CC;
+  box-shadow: 0 0 16px rgba(233, 206, 138, 0.22);
+}
+
+/* Monogram Insignia Medal */
+.leader-monogram {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(11, 15, 25, 0.9), rgba(17, 23, 40, 0.9));
+  border: 1.5px solid var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--gold-light);
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.25), inset 0 0 10px rgba(212, 175, 55, 0.15);
+}
+
+.leader-title-wrap {
+  margin-bottom: 18px;
+}
+
+.leader-subtitle {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--gold-light);
   font-weight: 600;
+  margin-bottom: 6px;
 }
 
-.leader-name {
+.leader-fullname {
   font-family: var(--font-display);
-  font-size: 0.95rem;
+  font-size: clamp(23px, 2.3vw, 29px);
   font-weight: 700;
   color: #FFFFFF;
   letter-spacing: 0.02em;
+  line-height: 1.25;
 }
 
-@media (max-width: 640px) {
-  .brand-leadership {
+.leader-rule {
+  width: 50px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  margin-bottom: 20px;
+}
+
+.leader-bio {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.8;
+  font-weight: 300;
+  margin-bottom: 24px;
+}
+
+.leader-bio strong {
+  color: #EDEAE0;
+  font-weight: 600;
+}
+
+.leader-bio em {
+  color: var(--gold-light);
+  font-style: normal;
+  font-weight: 500;
+}
+
+/* Strategic Pillars List */
+.leader-pillars-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 26px;
+  padding: 16px;
+  background: rgba(11, 15, 25, 0.5);
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  border-radius: 12px;
+}
+
+.leader-pillar-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  color: #EDEAE0;
+  font-weight: 400;
+}
+
+.chip-dot {
+  color: var(--gold);
+  font-size: 11px;
+}
+
+/* Leader Quote Box */
+.leader-quote-box {
+  margin-top: auto;
+  border-left: 2px solid var(--gold);
+  padding: 12px 16px;
+  background: rgba(212, 175, 55, 0.05);
+  border-radius: 0 10px 10px 0;
+}
+
+.leader-quote-box p {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-style: italic;
+  color: var(--gold-light);
+  line-height: 1.6;
+}
+
+/* Unifying Commitment Ribbon */
+.leadership-commitment-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  background: rgba(17, 23, 40, 0.7);
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  border-radius: 16px;
+  padding: 22px 32px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.commitment-badge {
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  font-weight: 700;
+  color: var(--gold-light);
+  padding: 5px 12px;
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+
+.commitment-text {
+  flex: 1;
+  font-size: 14.5px;
+  color: #EDEAE0;
+  font-weight: 400;
+  line-height: 1.6;
+  margin: 0;
+}
+
+@media (max-width: 960px) {
+  .leadership-philosophy-card {
+    flex-direction: column;
+    gap: 18px;
+    padding: 28px 24px;
+  }
+  .leadership-spotlight-grid {
     grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .leadership-commitment-strip {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 24px;
   }
 }
 

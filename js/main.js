@@ -89,7 +89,7 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   setTimeout(reposition, 350);
 
   // ScrollSpy to automatically glide pill as visitor browses sections
-  const sectionIds = ["about", "experience", "why", "models", "testimonials", "contact"];
+  const sectionIds = ["about", "leadership", "experience", "why", "models", "testimonials", "contact"];
   const sections = sectionIds
     .map((id) => document.getElementById(id))
     .filter(Boolean);
