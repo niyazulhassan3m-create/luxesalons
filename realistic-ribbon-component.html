@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Realistic Silk Ribbon Component &mdash; Physics Untie & Gravity Drop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ==========================================================================
+       Reset & Foundation
+       ========================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg-dark: #080B11;
+      --bg-surface: #0E1320;
+      --font-display: 'Cinzel', serif;
+      --font-ui: 'Plus Jakarta Sans', sans-serif;
+      
+      /* Silk Satin Color Themes */
+      --ribbon-base-1: #450007;
+      --ribbon-base-2: #7D0010;
+      --ribbon-core: #B80018;
+      --ribbon-vibrant: #D9162E;
+      --ribbon-sheen: #FF4A62;
+      --ribbon-crest: #FFA3B0;
+      --gold-bullion: #D4AF37;
+      --gold-light: #FFF3BD;
+
+      /* Physics animation speed multiplier (1 = normal, 2.5 = slow motion) */
+      --physics-duration: 2.2s;
+    }
+
+    body {
+      min-height: 100vh;
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 50% 25%, rgba(184, 0, 24, 0.12) 0%, transparent 60%),
+        radial-gradient(circle at 85% 75%, rgba(212, 175, 55, 0.08) 0%, transparent 55%),
+        linear-gradient(to bottom, #070A0F, #0A0E17);
+      color: #EDEAE0;
+      font-family: var(--font-ui);
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      user-select: none;
+    }
+
+    /* Ambient Spotlight & Floor Horizon */
+    .ambient-spotlight {
+      position: fixed;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 900px;
+      height: 600px;
+      background: radial-gradient(ellipse at 50% 30%, rgba(255, 245, 220, 0.06) 0%, rgba(212, 175, 55, 0.03) 45%, transparent 70%);
+      pointer-events: none;
+      filter: blur(40px);
+      z-index: 0;
+    }
+
+    .floor-reflection {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 140px;
+      background: linear-gradient(to top, rgba(14, 19, 32, 0.95), transparent);
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* Top Showcase Header */
+    .header-bar {
+      position: relative;
+      z-index: 20;
+      width: 100%;
+      max-width: 1200px;
+      padding: 32px 24px 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .brand-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      color: #FFF2CC;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-pill {
+      font-family: var(--font-ui);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      background: rgba(212, 175, 55, 0.12);
+      border: 1px solid rgba(212, 175, 55, 0.35);
+      color: var(--gold-bullion);
+      padding: 3px 9px;
+      border-radius: 999px;
+    }
+
+    .header-hint {
+      font-size: 13px;
+      color: #94A3B8;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hint-icon {
+      color: var(--gold-bullion);
+      animation: pulseHover 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulseHover {
+      0%, 100% { transform: scale(1); opacity: 0.7; }
+      50% { transform: scale(1.2); opacity: 1; }
+    }
+
+    /* ==========================================================================
+       MAIN STAGE: Realistic Natural Ribbon Component
+       ========================================================================== */
+    .ribbon-stage-viewport {
+      position: relative;
+      width: 100%;
+      max-width: 1440px;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 1400px;
+      padding: 40px 0;
+      z-index: 10;
+    }
+
+    /* Outer Wrapper with subtle catenary drape & ambient breathing */
+    .natural-ribbon-component {
+      position: absolute;
+      top: 48%;
+      left: 0;
+      right: 0;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 15;
+      animation: ambientClothDrape 6s ease-in-out infinite alternate;
+    }
+
+    @keyframes ambientClothDrape {
+      0% { transform: translateY(-50%) rotate(0deg); }
+      50% { transform: translateY(calc(-50% + 3px)) rotate(0.12deg); }
+      100% { transform: translateY(-50%) rotate(-0.08deg); }
+    }
+
+    /* Soft Realistic Drop Shadow Cast by Fabric onto Surface */
+    .cloth-ambient-shadow {
+      position: absolute;
+      top: 32px;
+      left: 4%;
+      right: 4%;
+      height: 44px;
+      background: radial-gradient(ellipse at 50% 50%, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.35) 45%, transparent 75%);
+      filter: blur(14px);
+      pointer-events: none;
+      z-index: 1;
+      transition: opacity 0.6s ease;
+    }
+
+    /* ==========================================================================
+       High-Fidelity Silk Satin Ribbon Segments
+       ========================================================================== */
+    .ribbon-half {
+      flex: 1;
+      height: 58px;
+      position: relative;
+      overflow: hidden;
+      z-index: 2;
+      transform-origin: top center;
+
+      /* Multi-layer High-Fidelity Silk Satin Shader */
+      background:
+        /* Fine warp/weft diagonal twill weave */
+        repeating-linear-gradient(58deg, rgba(255, 255, 255, 0.05) 0px, rgba(255, 255, 255, 0.05) 1.5px, transparent 1.5px, transparent 3.2px),
+        repeating-linear-gradient(-58deg, rgba(0, 0, 0, 0.08) 0px, rgba(0, 0, 0, 0.08) 1.5px, transparent 1.5px, transparent 3.2px),
+        /* Drawn silk longitudinal threads */
+        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.035) 0px, rgba(255, 255, 255, 0.035) 1px, transparent 1px, transparent 2px),
+        /* Curvature specular silk gradient */
+        linear-gradient(180deg, 
+          var(--ribbon-base-1) 0%, 
+          var(--ribbon-base-2) 14%, 
+          var(--ribbon-core) 28%, 
+          var(--ribbon-vibrant) 44%, 
+          var(--ribbon-sheen) 50%, 
+          var(--ribbon-vibrant) 58%, 
+          var(--ribbon-core) 74%, 
+          var(--ribbon-base-2) 88%, 
+          var(--ribbon-base-1) 100%);
+      
+      /* 3D Convex Cylinder Volume Shadows */
+      box-shadow: 
+        inset 0 3px 5px rgba(255, 255, 255, 0.48),
+        inset 0 -4px 7px rgba(10, 0, 2, 0.75),
+        0 10px 28px rgba(0, 0, 0, 0.75),
+        0 2px 10px rgba(184, 0, 24, 0.4);
+      
+      display: flex;
+      align-items: center;
+    }
+
+    .ribbon-half-left {
+      justify-content: flex-end;
+      border-radius: 0 4px 4px 0;
+      clip-path: polygon(0 0, 100% 0, 99.2% 100%, 0 100%);
+      transform-origin: 0% 50%;
+    }
+
+    .ribbon-half-right {
+      justify-content: flex-start;
+      border-radius: 4px 0 0 4px;
+      clip-path: polygon(0.8% 0, 100% 0, 100% 100%, 0 100%);
+      transform-origin: 100% 50%;
+    }
+
+    /* Braided Woven Gold Bullion Selvage Edges (Top & Bottom) */
+    .ribbon-selvage {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 3.5px;
+      z-index: 5;
+      background: repeating-linear-gradient(90deg, 
+        #FFF4D1 0px, 
+        #FFEAA7 2px, 
+        #D4AF37 4px, 
+        #9E7D23 6px, 
+        #59420B 8px, 
+        #D4AF37 10px);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.85);
+    }
+    .selvage-top { top: 0; }
+    .selvage-bottom { bottom: 0; }
+
+    /* Animated Specular Luster Drift */
+    .ribbon-luster-wave {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(110deg,
+        transparent 0%,
+        transparent 34%,
+        rgba(255, 255, 255, 0.15) 45%,
+        rgba(255, 245, 250, 0.45) 50%,
+        rgba(255, 255, 255, 0.15) 55%,
+        transparent 66%,
+        transparent 100%);
+      background-size: 260% 100%;
+      animation: lusterDrift 7.5s ease-in-out infinite alternate;
+      pointer-events: none;
+      mix-blend-mode: overlay;
+      z-index: 3;
+    }
+
+    @keyframes lusterDrift {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+
+    /* Embroidered Metallic Gold Lettering */
+    .ribbon-embroidery {
+      position: relative;
+      z-index: 4;
+      display: flex;
+      align-items: center;
+      padding: 0 36px;
+      width: 100%;
+    }
+
+    .ribbon-half-left .ribbon-embroidery { justify-content: flex-end; }
+    .ribbon-half-right .ribbon-embroidery { justify-content: flex-start; }
+
+    .embroidery-text {
+      font-family: var(--font-display);
+      font-size: 13.5px;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      background: linear-gradient(180deg, #FFFFFF 0%, #FFF3B8 24%, #E9CE8A 55%, #C29B38 82%, #856317 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: 
+        drop-shadow(0 1px 1px rgba(255, 255, 255, 0.45))
+        drop-shadow(0 2px 4px rgba(0, 0, 0, 0.95))
+        drop-shadow(0 0 12px rgba(212, 175, 55, 0.5));
+      white-space: nowrap;
+    }
+
+    /* ==========================================================================
+       Center 3D Tied Rosette Bow with Loops & Knot
+       ========================================================================== */
+    .ribbon-bow-center {
+      position: relative;
+      z-index: 30;
+      width: 110px;
+      height: 110px;
+      margin: 0 -12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.85));
+      transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1);
+    }
+
+    .ribbon-bow-center:hover {
+      transform: scale(1.08);
+    }
+
+    /* Center Pulsing Luminous Shockwave */
+    .bow-pulse-aura {
+      position: absolute;
+      inset: -16px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(212, 175, 55, 0.65);
+      animation: auraBreathe 2.4s cubic-bezier(0.2, 0.8, 0.4, 1) infinite;
+      pointer-events: none;
+    }
+
+    @keyframes auraBreathe {
+      0% { transform: scale(0.7); opacity: 0.85; }
+      100% { transform: scale(1.45); opacity: 0; }
+    }
+
+    /* 3D Overlapping Silk Loops */
+    .bow-loops-wrap {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .bow-loop {
+      position: absolute;
+      width: 50px;
+      height: 36px;
+      background:
+        repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 1.5px, transparent 1.5px, transparent 3px),
+        linear-gradient(135deg, var(--ribbon-sheen) 0%, var(--ribbon-vibrant) 35%, var(--ribbon-core) 75%, var(--ribbon-base-1) 100%);
+      border: 1.5px solid var(--gold-bullion);
+      box-shadow: inset 0 3px 6px rgba(255, 255, 255, 0.5), 0 8px 18px rgba(0, 0, 0, 0.7);
+      overflow: hidden;
+      transform-origin: center center;
+    }
+
+    /* Inner loop hollow cavity shadow */
+    .loop-cavity-shadow {
+      position: absolute;
+      inset: 5px;
+      background: radial-gradient(ellipse at center, #260005 35%, #66000D 75%, #9E071A 100%);
+      border-radius: 50%;
+      opacity: 0.95;
+      box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.8);
+    }
+
+    .loop-edge-glint {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.75), transparent);
+    }
+
+    /* Back Loops (Upper Tilt, darker) */
+    .loop-back-l {
+      top: 10px;
+      left: 6px;
+      transform: rotate(-48deg);
+      border-radius: 50% 16px 16px 50%;
+      filter: brightness(0.85);
+    }
+    .loop-back-r {
+      top: 10px;
+      right: 6px;
+      transform: rotate(48deg);
+      border-radius: 16px 50% 50% 16px;
+      filter: brightness(0.85);
+    }
+
+    /* Front Loops (Lower Tilt, vibrant) */
+    .loop-front-l {
+      top: 38px;
+      left: 4px;
+      transform: rotate(-18deg);
+      border-radius: 50% 14px 14px 50%;
+    }
+    .loop-front-r {
+      top: 38px;
+      right: 4px;
+      transform: rotate(18deg);
+      border-radius: 14px 50% 50% 14px;
+    }
+
+    /* Cinched Center Fabric Knot */
+    .bow-knot {
+      position: relative;
+      z-index: 10;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 36% 32%, var(--ribbon-sheen) 0%, var(--ribbon-vibrant) 38%, var(--ribbon-base-2) 74%, var(--ribbon-base-1) 100%);
+      border: 2px solid var(--gold-bullion);
+      box-shadow:
+        0 0 28px rgba(212, 175, 55, 0.8),
+        0 10px 28px rgba(0, 0, 0, 0.8),
+        inset 0 3px 6px rgba(255, 255, 255, 0.8),
+        inset 0 -3px 6px rgba(0, 0, 0, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transform-origin: center center;
+    }
+
+    .knot-creases {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .crease-line {
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(0,0,0,0.55) 30%, rgba(255,255,255,0.45) 50%, rgba(0,0,0,0.55) 70%, transparent);
+    }
+    .crease-1 { top: 18px; transform: rotate(-12deg); }
+    .crease-2 { top: 29px; }
+    .crease-3 { top: 40px; transform: rotate(12deg); }
+
+    .knot-gold-clasp {
+      position: absolute;
+      inset: 4px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 235, 170, 0.45);
+      pointer-events: none;
+    }
+
+    .knot-icon {
+      position: relative;
+      z-index: 5;
+      color: #FFF6CC;
+      font-size: 20px;
+      display: inline-block;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 8px rgba(212, 175, 55, 0.8));
+    }
+
+    /* Hanging Swallowtail Streamers */
+    .bow-streamer {
+      position: absolute;
+      top: 68px;
+      width: 26px;
+      height: 68px;
+      background: linear-gradient(180deg, var(--ribbon-core) 0%, var(--ribbon-vibrant) 25%, var(--ribbon-base-2) 80%, var(--ribbon-base-1) 100%);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.6);
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 82%, 0 100%);
+      z-index: 2;
+      transform-origin: top center;
+    }
+
+    .streamer-ridge-highlight {
+      position: absolute;
+      top: 0;
+      bottom: 12px;
+      left: 50%;
+      width: 2px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0.1) 80%, transparent 100%);
+      box-shadow: 0 0 4px rgba(255, 255, 255, 0.4);
+    }
+
+    .streamer-l {
+      left: 20px;
+      transform: rotate(18deg);
+      animation: streamerFlutterL 3.6s ease-in-out infinite alternate;
+    }
+    .streamer-r {
+      right: 20px;
+      transform: rotate(-18deg);
+      animation: streamerFlutterR 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes streamerFlutterL {
+      0% { transform: rotate(16deg) skewX(2deg); }
+      100% { transform: rotate(22deg) skewX(-2deg); }
+    }
+    @keyframes streamerFlutterR {
+      0% { transform: rotate(-16deg) skewX(-2deg); }
+      100% { transform: rotate(-22deg) skewX(2deg); }
+    }
+
+    /* Interactive Click Prompt Badge */
+    .ribbon-action-tooltip {
+      position: absolute;
+      top: -46px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(11, 15, 25, 0.96);
+      border: 1px solid var(--gold-bullion);
+      border-radius: 9999px;
+      padding: 7px 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #FFF3BD;
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      box-shadow: 0 6px 22px rgba(0, 0, 0, 0.8), 0 0 18px rgba(212, 175, 55, 0.45);
+      pointer-events: none;
+      animation: tooltipHover 2.2s ease-in-out infinite alternate;
+      z-index: 50;
+      transition: opacity 0.3s ease;
+    }
+
+    @keyframes tooltipHover {
+      0% { transform: translateX(-50%) translateY(0); }
+      100% { transform: translateX(-50%) translateY(-6px); }
+    }
+
+    /* ==========================================================================
+       PHYSICS UNTIE, UNFOLD & GRAVITY DROP ANIMATION ENGINE
+       Triggered when .is-untying is added to the component
+       ========================================================================== */
+    .natural-ribbon-component.is-untying {
+      pointer-events: none;
+      animation: none !important;
+    }
+
+    .natural-ribbon-component.is-untying .ribbon-action-tooltip {
+      opacity: 0;
+    }
+
+    .natural-ribbon-component.is-untying .cloth-ambient-shadow {
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    /* 1. Center Knot Loosens and Slips Apart */
+    .natural-ribbon-component.is-untying .bow-knot {
+      animation: knotUntieAndFall var(--physics-duration) cubic-bezier(0.25, 0.1, 0.3, 1) forwards;
+    }
+
+    @keyframes knotUntieAndFall {
+      0% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+      }
+      15% {
+        /* Knot loosens and expands as the knot unbinds */
+        transform: scale(1.22) rotate(-14deg) translateY(-8px);
+        opacity: 1;
+      }
+      30% {
+        /* Knot slips open, dropping through center */
+        transform: scale(0.9) rotate(28deg) translateY(60px);
+        opacity: 0.9;
+      }
+      65% {
+        /* Accelerating downward under gravity */
+        transform: scale(0.65) rotate(70deg) translateY(calc(55vh));
+        opacity: 0.6;
+      }
+      100% {
+        /* Drops fully to the bottom of the screen */
+        transform: scale(0.4) rotate(120deg) translateY(calc(95vh));
+        opacity: 0;
+      }
+    }
+
+    /* 2. Bow Loops Untie & Straighten Out into Falling Strips */
+    .natural-ribbon-component.is-untying .loop-back-l,
+    .natural-ribbon-component.is-untying .loop-front-l {
+      animation: loopUntieLeft var(--physics-duration) cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
+    }
+
+    .natural-ribbon-component.is-untying .loop-back-r,
+    .natural-ribbon-component.is-untying .loop-front-r {
+      animation: loopUntieRight var(--physics-duration) cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
+    }
+
+    @keyframes loopUntieLeft {
+      0% {
+        transform: rotate(-35deg) scale(1);
+        opacity: 1;
+      }
+      18% {
+        /* Uncurling loop stretches outwards and unpins */
+        transform: rotate(-10deg) scaleX(1.4) scaleY(0.6) translate(-25px, -15px);
+        opacity: 1;
+      }
+      40% {
+        /* Falling downward with air resistance flip */
+        transform: rotate(25deg) scaleX(0.7) scaleY(1.5) translate(-60px, 35vh);
+        opacity: 0.8;
+      }
+      75% {
+        transform: rotate(-18deg) scaleX(0.5) scaleY(1.8) translate(-90px, 70vh);
+        opacity: 0.4;
+      }
+      100% {
+        transform: rotate(15deg) scaleX(0.4) scaleY(2) translate(-110px, calc(95vh));
+        opacity: 0;
+      }
+    }
+
+    @keyframes loopUntieRight {
+      0% {
+        transform: rotate(35deg) scale(1);
+        opacity: 1;
+      }
+      18% {
+        transform: rotate(10deg) scaleX(1.4) scaleY(0.6) translate(25px, -15px);
+        opacity: 1;
+      }
+      40% {
+        transform: rotate(-25deg) scaleX(0.7) scaleY(1.5) translate(60px, 35vh);
+        opacity: 0.8;
+      }
+      75% {
+        transform: rotate(18deg) scaleX(0.5) scaleY(1.8) translate(90px, 70vh);
+        opacity: 0.4;
+      }
+      100% {
+        transform: rotate(-15deg) scaleX(0.4) scaleY(2) translate(110px, calc(95vh));
+        opacity: 0;
+      }
+    }
+
+    /* 3. Hanging Streamers Tumble & Fall Under Gravity */
+    .natural-ribbon-component.is-untying .streamer-l {
+      animation: streamerDropLeft var(--physics-duration) cubic-bezier(0.22, 0.9, 0.3, 1) forwards;
+    }
+
+    .natural-ribbon-component.is-untying .streamer-r {
+      animation: streamerDropRight var(--physics-duration) cubic-bezier(0.22, 0.9, 0.3, 1) forwards;
+    }
+
+    @keyframes streamerDropLeft {
+      0% {
+        transform: rotate(18deg) translateY(0);
+        opacity: 1;
+      }
+      20% {
+        transform: rotate(35deg) translate(-20px, 40px) skewX(10deg);
+        opacity: 1;
+      }
+      55% {
+        transform: rotate(-15deg) translate(-45px, 48vh) skewX(-14deg);
+        opacity: 0.75;
+      }
+      100% {
+        transform: rotate(28deg) translate(-70px, calc(92vh)) skewX(8deg);
+        opacity: 0;
+      }
+    }
+
+    @keyframes streamerDropRight {
+      0% {
+        transform: rotate(-18deg) translateY(0);
+        opacity: 1;
+      }
+      20% {
+        transform: rotate(-35deg) translate(20px, 40px) skewX(-10deg);
+        opacity: 1;
+      }
+      55% {
+        transform: rotate(15deg) translate(45px, 48vh) skewX(14deg);
+        opacity: 0.75;
+      }
+      100% {
+        transform: rotate(-28deg) translate(70px, calc(92vh)) skewX(-8deg);
+        opacity: 0;
+      }
+    }
+
+    /* 4. Main Horizontal Ribbon Bands: Sag, Unfold, Billow & Fall to the Bottom */
+    .natural-ribbon-component.is-untying .ribbon-half-left {
+      animation: ribbonFallLeft var(--physics-duration) cubic-bezier(0.28, 0, 0.35, 1.05) forwards;
+    }
+
+    .natural-ribbon-component.is-untying .ribbon-half-right {
+      animation: ribbonFallRight var(--physics-duration) cubic-bezier(0.28, 0, 0.35, 1.05) forwards;
+    }
+
+    @keyframes ribbonFallLeft {
+      0% {
+        transform: translateY(0) rotate(0deg) skewY(0deg);
+        opacity: 1;
+      }
+      18% {
+        /* Center tension releases: inner end sags deeply into catenary curve */
+        transform: translateY(35px) rotate(16deg) skewY(8deg) scaleY(0.92);
+        opacity: 1;
+      }
+      42% {
+        /* Accelerating downwards under gravity; air catches the fabric */
+        transform: translateY(32vh) rotate(-10deg) skewY(-8deg) scaleY(0.85);
+        opacity: 0.9;
+      }
+      70% {
+        /* Pendulum sway reverses as terminal velocity is reached */
+        transform: translateY(68vh) rotate(14deg) skewY(6deg) scaleY(0.78);
+        opacity: 0.65;
+      }
+      100% {
+        /* Drops and settles at the bottom of the screen */
+        transform: translateY(calc(96vh)) rotate(-8deg) skewY(-4deg) scaleY(0.65);
+        opacity: 0;
+      }
+    }
+
+    @keyframes ribbonFallRight {
+      0% {
+        transform: translateY(0) rotate(0deg) skewY(0deg);
+        opacity: 1;
+      }
+      18% {
+        /* Center tension releases: inner end sags deeply */
+        transform: translateY(35px) rotate(-16deg) skewY(-8deg) scaleY(0.92);
+        opacity: 1;
+      }
+      42% {
+        transform: translateY(32vh) rotate(10deg) skewY(8deg) scaleY(0.85);
+        opacity: 0.9;
+      }
+      70% {
+        transform: translateY(68vh) rotate(-14deg) skewY(-6deg) scaleY(0.78);
+        opacity: 0.65;
+      }
+      100% {
+        transform: translateY(calc(96vh)) rotate(8deg) skewY(4deg) scaleY(0.65);
+        opacity: 0;
+      }
+    }
+
+    /* Fallen Ribbon Puddle on Floor (Fades in at bottom) */
+    .floor-ribbon-puddle {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) scale(0.8);
+      width: 700px;
+      height: 48px;
+      background: radial-gradient(ellipse at 50% 60%, rgba(184, 0, 24, 0.6) 0%, rgba(125, 0, 16, 0.3) 40%, transparent 75%);
+      filter: blur(8px);
+      pointer-events: none;
+      opacity: 0;
+      z-index: 6;
+      transition: opacity 1.2s ease 1s, transform 1.2s ease 1s;
+    }
+
+    .floor-ribbon-puddle.settled {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
+
+    /* ==========================================================================
+       Interactive Bottom Control Deck
+       ========================================================================== */
+    .control-dock {
+      position: relative;
+      z-index: 20;
+      width: 100%;
+      max-width: 900px;
+      margin-bottom: 36px;
+      background: rgba(14, 19, 32, 0.82);
+      backdrop-filter: blur(18px) saturate(180%);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 18px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6);
+    }
+
+    .dock-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-action {
+      background: linear-gradient(135deg, #FFFFFF 0%, #E2E8F0 100%);
+      color: #0B0F19;
+      font-family: var(--font-ui);
+      font-weight: 700;
+      font-size: 13.5px;
+      padding: 10px 22px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+      transition: all 0.25s ease;
+    }
+
+    .btn-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.25);
+    }
+
+    .btn-reset {
+      background: rgba(255, 255, 255, 0.06);
+      color: #EDEAE0;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      font-family: var(--font-ui);
+      font-weight: 600;
+      font-size: 13.5px;
+      padding: 10px 20px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .btn-reset:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .dock-customizers {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .swatch-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .color-swatch {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .color-swatch:hover, .color-swatch.active {
+      transform: scale(1.18);
+      border-color: #FFFFFF;
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
+    }
+
+    .swatch-crimson { background: linear-gradient(135deg, #D9162E, #7D0010); }
+    .swatch-gold { background: linear-gradient(135deg, #FFDF73, #A67C1E); }
+    .swatch-emerald { background: linear-gradient(135deg, #10B981, #064E3B); }
+    .swatch-sapphire { background: linear-gradient(135deg, #38BDF8, #1E3A8A); }
+    .swatch-obsidian { background: linear-gradient(135deg, #475569, #0F172A); }
+
+    .slowmo-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #94A3B8;
+      cursor: pointer;
+    }
+
+    .slowmo-toggle input {
+      accent-color: var(--gold-bullion);
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .ribbon-half { height: 46px; }
+      .embroidery-text { font-size: 10px; letter-spacing: 0.16em; }
+      .ribbon-bow-center { width: 84px; height: 84px; }
+      .bow-knot { width: 48px; height: 48px; }
+      .control-dock { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Cinematic Lighting -->
+  <div class="ambient-spotlight" aria-hidden="true"></div>
+  <div class="floor-reflection" aria-hidden="true"></div>
+  <div class="floor-ribbon-puddle" id="floorPuddle" aria-hidden="true"></div>
+
+  <!-- Top Title Bar -->
+  <header class="header-bar">
+    <div class="brand-title">
+      <span>LUXE SILK RIBBON</span>
+      <span class="brand-pill">PHYSICS ENGINE</span>
+    </div>
+    <div class="header-hint">
+      <span class="hint-icon">&#x2726;</span>
+      <span>Click anywhere on the ribbon to untie &amp; drop</span>
+    </div>
+  </header>
+
+  <!-- ======================================================================
+       STAGE: REALISTIC NATURAL RIBBON COMPONENT
+       ====================================================================== -->
+  <main class="ribbon-stage-viewport">
+
+    <div class="natural-ribbon-component" id="ribbonComponent" role="button" tabindex="0" aria-label="Click to untie the realistic silk ribbon and watch it drop under gravity">
+      
+      <!-- Realistic Surface Drop Shadow -->
+      <div class="cloth-ambient-shadow" aria-hidden="true"></div>
+
+      <!-- Left Ribbon Segment (Rich Silk Satin with Woven Texture) -->
+      <div class="ribbon-half ribbon-half-left" id="ribbonLeft">
+        <div class="ribbon-selvage selvage-top" aria-hidden="true"></div>
+        <div class="ribbon-luster-wave" aria-hidden="true"></div>
+        <div class="ribbon-embroidery">
+          <span class="embroidery-text">&#x2702; LUXE MEN SALON &middot; INAUGURATION</span>
+        </div>
+        <div class="ribbon-selvage selvage-bottom" aria-hidden="true"></div>
+      </div>
+
+      <!-- Center 3D Tied Rosette Bow with Cavity Depth -->
+      <div class="ribbon-bow-center" id="bowCenter">
+        <div class="bow-pulse-aura" aria-hidden="true"></div>
+
+        <!-- 3D Overlapping Silk Loops -->
+        <div class="bow-loops-wrap" aria-hidden="true">
+          <!-- Back Loops -->
+          <div class="bow-loop loop-back-l">
+            <div class="loop-cavity-shadow"></div>
+            <div class="loop-edge-glint"></div>
+          </div>
+          <div class="bow-loop loop-back-r">
+            <div class="loop-cavity-shadow"></div>
+            <div class="loop-edge-glint"></div>
+          </div>
+          <!-- Front Loops -->
+          <div class="bow-loop loop-front-l">
+            <div class="loop-cavity-shadow"></div>
+            <div class="loop-edge-glint"></div>
+          </div>
+          <div class="bow-loop loop-front-r">
+            <div class="loop-cavity-shadow"></div>
+            <div class="loop-edge-glint"></div>
+          </div>
+        </div>
+
+        <!-- Cinched Knot with Pleat Creases -->
+        <div class="bow-knot" aria-hidden="true">
+          <div class="knot-creases">
+            <span class="crease-line crease-1"></span>
+            <span class="crease-line crease-2"></span>
+            <span class="crease-line crease-3"></span>
+          </div>
+          <div class="knot-gold-clasp"></div>
+          <span class="knot-icon">&#x2702;</span>
+        </div>
+
+        <!-- Hanging Swallowtail Streamers -->
+        <div class="bow-streamer streamer-l" aria-hidden="true">
+          <div class="streamer-ridge-highlight"></div>
+        </div>
+        <div class="bow-streamer streamer-r" aria-hidden="true">
+          <div class="streamer-ridge-highlight"></div>
+        </div>
+
+        <!-- Interactive Floating Tooltip -->
+        <div class="ribbon-action-tooltip">
+          <span>&#x2702; CLICK TO UNTIE &amp; DROP</span>
+        </div>
+      </div>
+
+      <!-- Right Ribbon Segment (Rich Silk Satin with Woven Texture) -->
+      <div class="ribbon-half ribbon-half-right" id="ribbonRight">
+        <div class="ribbon-selvage selvage-top" aria-hidden="true"></div>
+        <div class="ribbon-luster-wave" aria-hidden="true"></div>
+        <div class="ribbon-embroidery">
+          <span class="embroidery-text">THE ART OF THE GENTLEMAN &middot; REFINED &#x2702;</span>
+        </div>
+        <div class="ribbon-selvage selvage-bottom" aria-hidden="true"></div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Interactive Control Dock -->
+  <footer class="control-dock">
+    <div class="dock-actions">
+      <button class="btn-action" id="triggerUntieBtn">
+        <span>&#x25B6; Untie &amp; Drop Ribbon</span>
+      </button>
+      <button class="btn-reset" id="resetBtn">
+        <span>&#x21bb; Reset Ribbon</span>
+      </button>
+    </div>
+
+    <div class="dock-customizers">
+      <!-- Color Palette Themes -->
+      <div class="swatch-group" title="Select Silk Color Palette">
+        <button class="color-swatch swatch-crimson active" data-theme="crimson" aria-label="Royal Crimson Silk"></button>
+        <button class="color-swatch swatch-gold" data-theme="gold" aria-label="Imperial Gold Silk"></button>
+        <button class="color-swatch swatch-emerald" data-theme="emerald" aria-label="Emerald Satin"></button>
+        <button class="color-swatch swatch-sapphire" data-theme="sapphire" aria-label="Sapphire Velvet"></button>
+        <button class="color-swatch swatch-obsidian" data-theme="obsidian" aria-label="Obsidian Platinum"></button>
+      </div>
+
+      <!-- Slow Motion Checkbox -->
+      <label class="slowmo-toggle">
+        <input type="checkbox" id="slowMoCheck" />
+        <span>0.35x Slow-Motion Physics</span>
+      </label>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       Interactive Audio & Physics Controller
+       ========================================================================== */
+  <script>
+    (function initRibbonPhysics() {
+      const ribbon = document.getElementById("ribbonComponent");
+      const floorPuddle = document.getElementById("floorPuddle");
+      const triggerBtn = document.getElementById("triggerUntieBtn");
+      const resetBtn = document.getElementById("resetBtn");
+      const swatches = document.querySelectorAll(".color-swatch");
+      const slowMoCheck = document.getElementById("slowMoCheck");
+
+      let isUntied = false;
+
+      // Realistic Silk Audio Synthesizer via Web Audio API
+      function playSilkUntieSound() {
+        try {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (!AudioContext) return;
+          const ctx = new AudioContext();
+          if (ctx.state === "suspended") ctx.resume();
+
+          const now = ctx.currentTime;
+
+          // 1. Soft silk friction / knot slide sound
+          const bufferSize = Math.floor(ctx.sampleRate * 0.45);
+          const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+          const data = buffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1;
+          }
+
+          const noise = ctx.createBufferSource();
+          noise.buffer = buffer;
+
+          const filter = ctx.createBiquadFilter();
+          filter.type = "bandpass";
+          filter.frequency.setValueAtTime(1600, now);
+          filter.frequency.exponentialRampToValueAtTime(450, now + 0.4);
+          filter.Q.setValueAtTime(2.2, now);
+
+          const gain = ctx.createGain();
+          gain.gain.setValueAtTime(0.01, now);
+          gain.gain.linearRampToValueAtTime(0.35, now + 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+
+          noise.connect(filter);
+          filter.connect(gain);
+          gain.connect(ctx.destination);
+
+          noise.start(now);
+          noise.stop(now + 0.48);
+
+          // 2. Gentle fluttering air whoosh as ribbon falls
+          const osc = ctx.createOscillator();
+          const oscGain = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(280, now + 0.1);
+          osc.frequency.exponentialRampToValueAtTime(80, now + 0.6);
+
+          oscGain.gain.setValueAtTime(0.001, now);
+          oscGain.gain.linearRampToValueAtTime(0.08, now + 0.2);
+          oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.65);
+
+          osc.connect(oscGain);
+          oscGain.connect(ctx.destination);
+          osc.start(now + 0.1);
+          osc.stop(now + 0.7);
+        } catch (e) {
+          // Ignore audio policy restriction
+        }
+      }
+
+      // Untie & Gravity Drop Execution
+      function untieRibbon() {
+        if (isUntied) return;
+        isUntied = true;
+
+        playSilkUntieSound();
+        ribbon.classList.add("is-untying");
+        floorPuddle.classList.add("settled");
+      }
+
+      // Reset to Pristine Tied State
+      function resetRibbon() {
+        ribbon.classList.remove("is-untying");
+        floorPuddle.classList.remove("settled");
+
+        // Force DOM reflow to cancel animation immediately
+        void ribbon.offsetWidth;
+        isUntied = false;
+      }
+
+      // Click Events
+      ribbon.addEventListener("click", untieRibbon);
+      ribbon.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          untieRibbon();
+        }
+      });
+
+      triggerBtn.addEventListener("click", untieRibbon);
+      resetBtn.addEventListener("click", resetRibbon);
+
+      // Slow-Motion Physics Toggle
+      slowMoCheck.addEventListener("change", () => {
+        const root = document.documentElement;
+        if (slowMoCheck.checked) {
+          root.style.setProperty("--physics-duration", "5.8s");
+        } else {
+          root.style.setProperty("--physics-duration", "2.2s");
+        }
+      });
+
+      // Palette Themes
+      const themes = {
+        crimson: {
+          b1: '#450007', b2: '#7D0010', core: '#B80018', vib: '#D9162E', sheen: '#FF4A62', gold: '#D4AF37'
+        },
+        gold: {
+          b1: '#4A3408', b2: '#7D580C', core: '#B8860B', vib: '#D4AF37', sheen: '#FFDF73', gold: '#FFFFFF'
+        },
+        emerald: {
+          b1: '#032617', b2: '#064E3B', core: '#047857', vib: '#059669', sheen: '#34D399', gold: '#D4AF37'
+        },
+        sapphire: {
+          b1: '#0B1B3D', b2: '#1E3A8A', core: '#1D4ED8', vib: '#2563EB', sheen: '#60A5FA', gold: '#E2E8F0'
+        },
+        obsidian: {
+          b1: '#0B0F19', b2: '#1E293B', core: '#334155', vib: '#475569', sheen: '#94A3B8', gold: '#D4AF37'
+        }
+      };
+
+      swatches.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          swatches.forEach(s => s.classList.remove("active"));
+          btn.classList.add("active");
+          const t = themes[btn.dataset.theme];
+          if (!t) return;
+          const root = document.documentElement;
+          root.style.setProperty("--ribbon-base-1", t.b1);
+          root.style.setProperty("--ribbon-base-2", t.b2);
+          root.style.setProperty("--ribbon-core", t.core);
+          root.style.setProperty("--ribbon-vibrant", t.vib);
+          root.style.setProperty("--ribbon-sheen", t.sheen);
+          root.style.setProperty("--gold-bullion", t.gold);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
