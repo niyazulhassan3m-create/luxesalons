@@ -1055,7 +1055,8 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 /* Two Dedicated Executive Spotlight Profiles */
 .leadership-spotlight-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: minmax(0, 760px);
+  justify-content: center;
   gap: 36px;
   margin-bottom: 50px;
 }
@@ -2900,9 +2901,68 @@ body.portal-locked {
   }
 }
 
+/* ==========================================================================
+   3D Perspective Section Heading Flip-Reveal
+   Words enter from rotateX(45deg) + blur, settling into sharp focus.
+   ========================================================================== */
+
+/* Each word is wrapped in .hfr-wrap (clips overflow) > .hfr-inner (animates) */
+.hfr-wrap {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: baseline;
+  /* per-word perspective so each flip has its own vanishing point */
+  perspective: 700px;
+  perspective-origin: 50% 0%;
+  /* small bottom padding so descenders aren't clipped */
+  padding-bottom: 0.06em;
+  margin-bottom: -0.06em;
+}
+
+.hfr-inner {
+  display: inline-block;
+  /* initial hidden state: flipped + blurred */
+  opacity: 0;
+  transform: rotateX(45deg) translateY(24px);
+  filter: blur(8px);
+  transform-origin: 50% 100%;
+  will-change: opacity, transform, filter;
+}
+
+/* Trigger: parent heading receives .hfr-visible from JS */
+.hfr-visible .hfr-inner {
+  animation: hfrFlipIn 0.88s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  /* stagger each word by 75ms using the --wi CSS variable set inline */
+  animation-delay: calc(var(--wi, 0) * 75ms + 60ms);
+}
+
+@keyframes hfrFlipIn {
+  0% {
+    opacity: 0;
+    transform: rotateX(45deg) translateY(24px);
+    filter: blur(8px);
+  }
+  45% {
+    opacity: 0.85;
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: rotateX(0deg) translateY(0px);
+    filter: blur(0px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
   html { scroll-behavior: auto; }
   .scroll-cue-line { animation: none; }
   .mall-portal { display: none !important; }
+  /* Skip flip animation entirely for users who prefer reduced motion */
+  .hfr-inner {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    animation: none !important;
+  }
 }

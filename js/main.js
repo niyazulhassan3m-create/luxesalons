@@ -635,3 +635,92 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
     });
   });
 })();
+
+/* ==========================================================================
+   3D Perspective Section Heading Flip-Reveal Engine
+   Splits .section-title text into per-word spans and triggers the
+   CSS flip animation as each heading enters the viewport.
+   ========================================================================== */
+(function headingFlipReveal() {
+  const headings = document.querySelectorAll('.section-title');
+  if (!headings.length) return;
+
+  /**
+   * Splits a heading's child nodes into individual word spans.
+   * Handles plain text nodes, <em>, <strong>, <br>, and other inline tags.
+   */
+  function splitHeading(heading) {
+    const childNodes = Array.from(heading.childNodes);
+    heading.innerHTML = '';
+    let wordIdx = 0;
+
+    function makeWordSpan(textContent, tagName, className) {
+      const wrap = document.createElement('span');
+      wrap.className = 'hfr-wrap';
+
+      const inner = document.createElement('span');
+      inner.className = 'hfr-inner';
+      inner.style.setProperty('--wi', wordIdx++);
+
+      if (tagName) {
+        // Re-wrap in the original tag (e.g. <em>) to preserve italic/gold styling
+        const tag = document.createElement(tagName);
+        if (className) tag.className = className;
+        tag.textContent = textContent;
+        inner.appendChild(tag);
+      } else {
+        inner.textContent = textContent;
+      }
+
+      wrap.appendChild(inner);
+      return wrap;
+    }
+
+    childNodes.forEach(node => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        // Split raw text into words; preserve whitespace between them
+        node.textContent.split(/(\s+)/).forEach(part => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) {
+            heading.appendChild(document.createTextNode(part));
+          } else {
+            heading.appendChild(makeWordSpan(part, null, null));
+          }
+        });
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        if (node.tagName === 'BR') {
+          heading.appendChild(document.createElement('br'));
+        } else {
+          // Inline element like <em> — split its text into words too
+          node.textContent.split(/(\s+)/).forEach(part => {
+            if (!part) return;
+            if (/^\s+$/.test(part)) {
+              heading.appendChild(document.createTextNode(part));
+            } else {
+              heading.appendChild(
+                makeWordSpan(part, node.tagName, node.className || null)
+              );
+            }
+          });
+        }
+      }
+    });
+  }
+
+  headings.forEach(h => splitHeading(h));
+
+  // Observe each heading; add .hfr-visible once it crosses into the viewport
+  const io = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('hfr-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.18, rootMargin: '0px 0px -55px 0px' }
+  );
+
+  headings.forEach(h => io.observe(h));
+})();
