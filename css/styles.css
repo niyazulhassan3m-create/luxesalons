@@ -933,6 +933,14 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   border: 1px solid rgba(94, 142, 222, 0.45);
   color: #BED8FF;
 }
+.city-badge.intl {
+  background: rgba(16, 185, 129, 0.16);
+  border: 1px solid rgba(16, 185, 129, 0.55);
+  color: #6EE7B7;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.25);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
 
 /* Sections */
 .section { position: relative; z-index: 1; padding: 130px 0; }
