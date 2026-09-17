@@ -505,15 +505,88 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   border-radius: 9999px;
   text-decoration: none;
   white-space: nowrap;
-  transition: color 0.25s ease, text-shadow 0.25s ease;
+  /* overflow hidden keeps the underline bar clipped inside the link bounds */
+  overflow: hidden;
+  /* block so ::after can sit below text */
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  transition: color 0.28s ease;
 }
+
+/* ── Inner text span: lifts on hover ─────────────────────────────── */
+.nav-item-text {
+  display: inline-block;
+  transform: translateY(0);
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+              text-shadow 0.28s ease;
+  will-change: transform;
+}
+
+.nav-item:hover .nav-item-text {
+  transform: translateY(-2px);
+  text-shadow: 0 0 14px rgba(212, 175, 55, 0.55);
+}
+
+.nav-item.active .nav-item-text {
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.75);
+}
+
+/* ── Metallic gold underline bar: scaleX slide-in ─────────────────── */
+.nav-item::after {
+  content: '';
+  /* absolute so it doesn't push text upward */
+  position: absolute;
+  bottom: 3px;
+  left: 12px;
+  right: 12px;
+  height: 1.5px;
+  border-radius: 9999px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    #B58B2A 10%,
+    #D4AF37 30%,
+    #F3E5AB 50%,
+    #E9CE8A 65%,
+    #D4AF37 82%,
+    #B58B2A 92%,
+    transparent 100%
+  );
+  box-shadow: 0 0 6px rgba(212, 175, 55, 0.65),
+              0 0 12px rgba(212, 175, 55, 0.30);
+  /* start fully scaled-out from the left */
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity  0.28s ease;
+  opacity: 0;
+}
+
+.nav-item:hover::after {
+  transform: scaleX(1);
+  opacity: 1;
+}
+
+/* Active link: persistent half-width bar, centred */
+.nav-item.active::after {
+  transform: scaleX(0.55);
+  transform-origin: center center;
+  opacity: 0.7;
+}
+.nav-item.active:hover::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+  opacity: 1;
+}
+
+/* Text colour states */
 .nav-item:hover {
   color: #FFFFFF;
 }
 .nav-item.active {
   color: #FFFFFF;
   font-weight: 600;
-  text-shadow: 0 0 10px rgba(212, 175, 55, 0.75);
 }
 
 .nav-mobile-drawer-actions {
@@ -2910,67 +2983,42 @@ body.portal-locked {
 }
 
 /* ==========================================================================
-   3D Perspective Section Heading Flip-Reveal
-   Words enter from rotateX(45deg) + blur, settling into sharp focus.
+   Section Heading Blur-to-Focus Word Reveal — GSAP ScrollTrigger
+   DOM structure: .hfr-wrap (clips overflow) > .hfr-inner (GSAP target)
+   All motion (opacity, filter blur, translateY) is driven by GSAP;
+   CSS here provides only the structural baseline and a11y fallback.
    ========================================================================== */
 
-/* Each word is wrapped in .hfr-wrap (clips overflow) > .hfr-inner (animates) */
+/* Wrapper: clips the word during the upward drift so nothing spills out */
 .hfr-wrap {
   display: inline-block;
   overflow: hidden;
   vertical-align: baseline;
-  /* per-word perspective so each flip has its own vanishing point */
-  perspective: 700px;
-  perspective-origin: 50% 0%;
-  /* small bottom padding so descenders aren't clipped */
+  /* Small descender buffer so letters like g/y are never cropped */
   padding-bottom: 0.06em;
-  margin-bottom: -0.06em;
+  margin-bottom:  -0.06em;
 }
 
+/* Inner: GSAP writes opacity / filter / transform inline — no CSS defaults needed */
 .hfr-inner {
   display: inline-block;
-  /* initial hidden state: flipped + blurred */
+  /* Start invisible; GSAP overrides these with inline styles immediately */
   opacity: 0;
-  transform: rotateX(45deg) translateY(24px);
-  filter: blur(8px);
-  transform-origin: 50% 100%;
-  will-change: opacity, transform, filter;
+  filter: blur(10px);
+  will-change: opacity, filter, transform;
 }
 
-/* Trigger: parent heading receives .hfr-visible from JS */
-.hfr-visible .hfr-inner {
-  animation: hfrFlipIn 0.88s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  /* stagger each word by 75ms using the --wi CSS variable set inline */
-  animation-delay: calc(var(--wi, 0) * 75ms + 60ms);
-}
-
-@keyframes hfrFlipIn {
-  0% {
-    opacity: 0;
-    transform: rotateX(45deg) translateY(24px);
-    filter: blur(8px);
-  }
-  45% {
-    opacity: 0.85;
-    filter: blur(2px);
-  }
-  100% {
-    opacity: 1;
-    transform: rotateX(0deg) translateY(0px);
-    filter: blur(0px);
-  }
-}
-
+/* Reduced-motion: bypass GSAP and show words instantly */
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
   html { scroll-behavior: auto; }
   .scroll-cue-line { animation: none; }
   .mall-portal { display: none !important; }
-  /* Skip flip animation entirely for users who prefer reduced motion */
   .hfr-inner {
     opacity: 1 !important;
-    transform: none !important;
     filter: none !important;
+    transform: none !important;
     animation: none !important;
+    transition: none !important;
   }
 }

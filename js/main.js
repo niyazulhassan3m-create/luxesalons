@@ -636,34 +636,50 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   });
 })();
 
+
 /* ==========================================================================
-   3D Perspective Section Heading Flip-Reveal Engine
-   Splits .section-title text into per-word spans and triggers the
-   CSS flip animation as each heading enters the viewport.
+   Section Heading Blur-to-Focus Reveal — GSAP ScrollTrigger
+
+   Each .section-title is word-split into .hfr-wrap > .hfr-inner spans.
+   As the heading scrolls into view ScrollTrigger fires a gsap.to() tween
+   that transitions every word from:
+     opacity: 0  filter: blur(10px)  y: +28px
+   to:
+     opacity: 1  filter: blur(0px)   y: 0
+   with a per-word stagger of 80ms for a fluid cascade.
    ========================================================================== */
-(function headingFlipReveal() {
+(function headingBlurReveal() {
+  /* Bail gracefully if GSAP / ScrollTrigger didn’t load */
+  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+    /* Fallback: show all words immediately so content is never hidden */
+    document.querySelectorAll('.hfr-inner').forEach(el => {
+      el.style.opacity = '1';
+      el.style.filter  = 'none';
+    });
+    return;
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
+
   const headings = document.querySelectorAll('.section-title');
   if (!headings.length) return;
 
-  /**
-   * Splits a heading's child nodes into individual word spans.
-   * Handles plain text nodes, <em>, <strong>, <br>, and other inline tags.
-   */
+  /* ── Word splitter — identical DOM output to the previous implementation ── */
   function splitHeading(heading) {
     const childNodes = Array.from(heading.childNodes);
     heading.innerHTML = '';
     let wordIdx = 0;
 
     function makeWordSpan(textContent, tagName, className) {
-      const wrap = document.createElement('span');
+      const wrap  = document.createElement('span');
       wrap.className = 'hfr-wrap';
 
       const inner = document.createElement('span');
-      inner.className = 'hfr-inner';
-      inner.style.setProperty('--wi', wordIdx++);
+      inner.className  = 'hfr-inner';
+      /* Store index for debugging / future CSS stagger fallback */
+      inner.dataset.wi = wordIdx++;
 
       if (tagName) {
-        // Re-wrap in the original tag (e.g. <em>) to preserve italic/gold styling
         const tag = document.createElement(tagName);
         if (className) tag.className = className;
         tag.textContent = textContent;
@@ -678,52 +694,57 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
     childNodes.forEach(node => {
       if (node.nodeType === Node.TEXT_NODE) {
-        // Split raw text into words; preserve whitespace between them
         node.textContent.split(/(\s+)/).forEach(part => {
           if (!part) return;
-          if (/^\s+$/.test(part)) {
-            heading.appendChild(document.createTextNode(part));
-          } else {
-            heading.appendChild(makeWordSpan(part, null, null));
-          }
+          if (/^\s+$/.test(part)) heading.appendChild(document.createTextNode(part));
+          else heading.appendChild(makeWordSpan(part, null, null));
         });
       } else if (node.nodeType === Node.ELEMENT_NODE) {
         if (node.tagName === 'BR') {
           heading.appendChild(document.createElement('br'));
         } else {
-          // Inline element like <em> — split its text into words too
           node.textContent.split(/(\s+)/).forEach(part => {
             if (!part) return;
-            if (/^\s+$/.test(part)) {
-              heading.appendChild(document.createTextNode(part));
-            } else {
-              heading.appendChild(
-                makeWordSpan(part, node.tagName, node.className || null)
-              );
-            }
+            if (/^\s+$/.test(part)) heading.appendChild(document.createTextNode(part));
+            else heading.appendChild(makeWordSpan(part, node.tagName, node.className || null));
           });
         }
       }
     });
   }
 
+  /* ── Split all headings, then set GSAP initial state ───────────────────── */
   headings.forEach(h => splitHeading(h));
 
-  // Observe each heading; add .hfr-visible once it crosses into the viewport
-  const io = new IntersectionObserver(
-    entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('hfr-visible');
-          io.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.18, rootMargin: '0px 0px -55px 0px' }
-  );
+  /* Pin every word in its blurred-out starting state before ScrollTrigger fires */
+  gsap.set('.hfr-inner', {
+    opacity: 0,
+    filter:  'blur(10px)',
+    y:       28
+  });
 
-  headings.forEach(h => io.observe(h));
+  /* ── Per-heading ScrollTrigger — fires once as heading enters viewport ─── */
+  headings.forEach(heading => {
+    const words = heading.querySelectorAll('.hfr-inner');
+
+    ScrollTrigger.create({
+      trigger:  heading,
+      start:    'top 82%',       /* fire when heading top is 82% from viewport top */
+      once:     true,            /* each heading animates only once */
+      onEnter: () => {
+        gsap.to(words, {
+          opacity:  1,
+          filter:   'blur(0px)',
+          y:        0,
+          duration: 0.9,
+          ease:     'power3.out',
+          stagger:  0.08         /* 80ms cascade between successive words */
+        });
+      }
+    });
+  });
 })();
+
 
 /* ==========================================================================
    Hero Title — Gold Dust Particle Text Effect
