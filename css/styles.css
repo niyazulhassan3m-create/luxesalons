@@ -51,253 +51,6 @@ input[type="text"], input[type="email"], input[type="tel"], textarea {
   cursor: text !important;
 }
 
-/* ==========================================================================
-   Stationary Scissor Cursor Gold Shine Engine
-   Shines with radiant gold when idle, stops instantly upon cursor movement
-   ========================================================================== */
-.cursor-gold-shine {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 0;
-  pointer-events: none !important;
-  z-index: 9999999;
-  opacity: 0;
-  visibility: hidden;
-  transform: translate3d(-999px, -999px, 0);
-  transition: opacity 0.08s cubic-bezier(0.16, 1, 0.3, 1),
-              visibility 0.08s step-end;
-  will-change: transform, opacity;
-}
-
-/* When the cursor stops moving, bloom in the golden shine */
-.cursor-gold-shine.is-shining {
-  opacity: 1;
-  visibility: visible;
-  transition: opacity 0.28s cubic-bezier(0.2, 0.9, 0.4, 1),
-              visibility 0s step-start;
-}
-
-.scissor-shine-core {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 36px;
-  height: 36px;
-  /* (0,0) matches the scissor blade tip (hotspot at 2,2 of cursor SVG) */
-  pointer-events: none !important;
-  transform-origin: 10px 10px;
-}
-
-/* 1. Ambient Golden Halo / Radiant Glow */
-.shine-ambient-glow {
-  position: absolute;
-  top: -8px;
-  left: -8px;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 40% 40%, 
-    rgba(255, 250, 230, 0.95) 0%, 
-    rgba(255, 215, 0, 0.78) 22%, 
-    rgba(212, 175, 55, 0.45) 50%, 
-    rgba(212, 175, 55, 0) 75%);
-  filter: blur(5px);
-  mix-blend-mode: screen;
-  pointer-events: none !important;
-  animation: shineGlowPulse 1.9s ease-in-out infinite alternate;
-}
-
-/* 2. Diagonal Specular Beam that sweeps along the scissor blade (0,0 to 12,12) */
-.shine-blade-sweep {
-  position: absolute;
-  top: 0px;
-  left: -2px;
-  width: 22px;
-  height: 3.5px;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    rgba(255, 255, 255, 0.98) 50%, 
-    rgba(255, 223, 115, 0.85) 75%, 
-    transparent 100%);
-  border-radius: 999px;
-  transform-origin: left center;
-  transform: rotate(45deg);
-  filter: drop-shadow(0 0 4px #FFF5D6) drop-shadow(0 0 8px #FFD700);
-  pointer-events: none !important;
-  animation: shineBladeSweep 1.6s ease-in-out infinite;
-}
-
-/* 3. Diamond Star Glints (Tip & Pivot) */
-.shine-star-glint {
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  pointer-events: none !important;
-}
-
-.shine-star-glint::before,
-.shine-star-glint::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border-radius: 999px;
-  pointer-events: none !important;
-}
-
-/* Center Pivot glint at x: 10px, y: 10px (the gold screw pivot) */
-.glint-pivot {
-  top: 1px;
-  left: 1px;
-  animation: glintSpinPivot 2.4s ease-in-out infinite alternate;
-}
-
-.glint-pivot::before {
-  width: 20px;
-  height: 2.4px;
-  background: linear-gradient(to right, transparent, #FFFDF5 48%, #FFDF73 70%, transparent);
-  box-shadow: 0 0 6px #FFE899, 0 0 14px #D4AF37;
-}
-
-.glint-pivot::after {
-  width: 2.4px;
-  height: 20px;
-  background: linear-gradient(to bottom, transparent, #FFFDF5 48%, #FFDF73 70%, transparent);
-  box-shadow: 0 0 6px #FFE899, 0 0 14px #D4AF37;
-}
-
-/* Blade Tip glint at x: 0px, y: 0px (the cutting tip) */
-.glint-tip {
-  top: -9px;
-  left: -9px;
-  animation: glintSpinTip 1.9s ease-in-out infinite alternate;
-}
-
-.glint-tip::before {
-  width: 14px;
-  height: 2px;
-  background: linear-gradient(to right, transparent, #FFFFFF 50%, transparent);
-  box-shadow: 0 0 6px #FFFFFF, 0 0 10px #FFD700;
-}
-
-.glint-tip::after {
-  width: 2px;
-  height: 14px;
-  background: linear-gradient(to bottom, transparent, #FFFFFF 50%, transparent);
-  box-shadow: 0 0 6px #FFFFFF, 0 0 10px #FFD700;
-}
-
-/* 4. Golden Orbiting Sparkle Dust */
-.shine-sparkle-speck {
-  position: absolute;
-  color: #FFF2B2;
-  font-size: 11px;
-  line-height: 1;
-  text-shadow: 0 0 4px #FFFFFF, 0 0 8px #FFD700, 0 0 14px #D4AF37;
-  pointer-events: none !important;
-  animation: sparkleTwinkle 2.2s ease-in-out infinite;
-  user-select: none;
-}
-
-.speck-1 {
-  top: -9px;
-  left: 12px;
-  font-size: 10px;
-  animation-delay: 0s;
-}
-
-.speck-2 {
-  top: 15px;
-  left: 24px;
-  font-size: 9px;
-  color: #FFE680;
-  animation-delay: 0.6s;
-}
-
-.speck-3 {
-  top: 22px;
-  left: 2px;
-  font-size: 8px;
-  color: #FFFFFF;
-  animation-delay: 1.2s;
-}
-
-/* Keyframe Animations for Golden Gleam */
-@keyframes shineGlowPulse {
-  0% {
-    transform: scale(0.85);
-    opacity: 0.65;
-  }
-  50% {
-    transform: scale(1.18);
-    opacity: 0.98;
-  }
-  100% {
-    transform: scale(0.95);
-    opacity: 0.80;
-  }
-}
-
-@keyframes shineBladeSweep {
-  0% {
-    opacity: 0;
-    transform: rotate(45deg) translateX(-6px);
-  }
-  25% {
-    opacity: 1;
-  }
-  75% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    transform: rotate(45deg) translateX(14px);
-  }
-}
-
-@keyframes glintSpinPivot {
-  0% {
-    transform: rotate(0deg) scale(0.8);
-    opacity: 0.7;
-  }
-  50% {
-    transform: rotate(45deg) scale(1.3);
-    opacity: 1;
-  }
-  100% {
-    transform: rotate(90deg) scale(0.85);
-    opacity: 0.75;
-  }
-}
-
-@keyframes glintSpinTip {
-  0% {
-    transform: rotate(45deg) scale(0.7);
-    opacity: 0.5;
-  }
-  50% {
-    transform: rotate(90deg) scale(1.25);
-    opacity: 1;
-  }
-  100% {
-    transform: rotate(135deg) scale(0.65);
-    opacity: 0.6;
-  }
-}
-
-@keyframes sparkleTwinkle {
-  0%, 100% {
-    opacity: 0.15;
-    transform: scale(0.6) translateY(0);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.25) translateY(-2px);
-  }
-}
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -2983,42 +2736,49 @@ body.portal-locked {
 }
 
 /* ==========================================================================
-   Section Heading Blur-to-Focus Word Reveal — GSAP ScrollTrigger
-   DOM structure: .hfr-wrap (clips overflow) > .hfr-inner (GSAP target)
-   All motion (opacity, filter blur, translateY) is driven by GSAP;
-   CSS here provides only the structural baseline and a11y fallback.
+   SplitType Masked Character Text Reveal — GSAP ScrollTrigger
+   Each character smoothly fades up from a masked container with slight stagger
    ========================================================================== */
 
-/* Wrapper: clips the word during the upward drift so nothing spills out */
-.hfr-wrap {
+/* Word acts as the masked overflow container for each character */
+.section-title .word,
+.social-strip-title .word,
+[data-split-reveal] .word {
   display: inline-block;
   overflow: hidden;
   vertical-align: baseline;
-  /* Small descender buffer so letters like g/y are never cropped */
-  padding-bottom: 0.06em;
-  margin-bottom:  -0.06em;
+  /* Descender buffer so letters like g, y, j, p, q are never clipped */
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+  padding-top: 0.04em;
+  margin-top: -0.04em;
+  line-height: 1.16;
 }
 
-/* Inner: GSAP writes opacity / filter / transform inline — no CSS defaults needed */
-.hfr-inner {
+/* Individual character element */
+.section-title .char,
+.social-strip-title .char,
+[data-split-reveal] .char {
   display: inline-block;
-  /* Start invisible; GSAP overrides these with inline styles immediately */
-  opacity: 0;
-  filter: blur(10px);
-  will-change: opacity, filter, transform;
+  will-change: transform, opacity;
 }
 
-/* Reduced-motion: bypass GSAP and show words instantly */
+/* Reduced-motion: bypass animations and display text immediately */
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
   html { scroll-behavior: auto; }
   .scroll-cue-line { animation: none; }
   .mall-portal { display: none !important; }
-  .hfr-inner {
+  .section-title .word,
+  .social-strip-title .word,
+  [data-split-reveal] .word {
+    overflow: visible !important;
+  }
+  .section-title .char,
+  .social-strip-title .char,
+  [data-split-reveal] .char {
     opacity: 1 !important;
-    filter: none !important;
     transform: none !important;
-    animation: none !important;
-    transition: none !important;
+    will-change: auto !important;
   }
 }

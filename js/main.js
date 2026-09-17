@@ -520,84 +520,6 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   window.addEventListener("mouseup", () => document.body.classList.remove("scissor-cutting"));
 })();
 
-/* ==========================================================================
-   Stationary Scissor Cursor Gold Shine Engine
-   Shines like brilliant gold when the cursor is NOT moving,
-   and stops immediately the moment the cursor moves.
-   ========================================================================== */
-(function scissorCursorGoldShine() {
-  // Only activate on devices that support hover / fine pointers
-  if (window.matchMedia && !window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-    return;
-  }
-
-  const shineEl = document.getElementById("cursorGoldShine");
-  if (!shineEl) return;
-
-  let idleTimer = null;
-  let lastX = -999;
-  let lastY = -999;
-  const IDLE_DELAY = 120; // 120ms of no movement triggers the golden shine
-
-  function stopShine() {
-    shineEl.classList.remove("is-shining");
-  }
-
-  function startShine() {
-    if (lastX >= 0 && lastY >= 0) {
-      shineEl.classList.add("is-shining");
-    }
-  }
-
-  function updatePosition(x, y) {
-    shineEl.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-  }
-
-  function onMouseMove(e) {
-    const x = e.clientX;
-    const y = e.clientY;
-
-    // Check if cursor actually moved position
-    if (x === lastX && y === lastY) return;
-
-    lastX = x;
-    lastY = y;
-
-    // Instantly stop the shine when moving
-    stopShine();
-
-    // Position shine element directly at cursor coordinates
-    updatePosition(x, y);
-
-    // Reset idle timer
-    if (idleTimer) clearTimeout(idleTimer);
-
-    // When the cursor is stationary (not moving), shine like gold!
-    idleTimer = setTimeout(() => {
-      startShine();
-    }, IDLE_DELAY);
-  }
-
-  function onMouseLeave() {
-    if (idleTimer) clearTimeout(idleTimer);
-    stopShine();
-    lastX = -999;
-    lastY = -999;
-  }
-
-  // Bind mouse and window events
-  document.addEventListener("mousemove", onMouseMove, { passive: true });
-  document.addEventListener("mouseleave", onMouseLeave, { passive: true });
-  window.addEventListener("blur", onMouseLeave, { passive: true });
-  window.addEventListener("scroll", () => {
-    // When scrolling with wheel/trackpad, also pause shine until settled
-    stopShine();
-    if (idleTimer) clearTimeout(idleTimer);
-    if (lastX >= 0 && lastY >= 0) {
-      idleTimer = setTimeout(startShine, IDLE_DELAY);
-    }
-  }, { passive: true });
-})();
 
 /* ==========================================================================
    Futuristic Layered Typography Parallax Controller
@@ -638,111 +560,86 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
 
 /* ==========================================================================
-   Section Heading Blur-to-Focus Reveal — GSAP ScrollTrigger
-
-   Each .section-title is word-split into .hfr-wrap > .hfr-inner spans.
-   As the heading scrolls into view ScrollTrigger fires a gsap.to() tween
-   that transitions every word from:
-     opacity: 0  filter: blur(10px)  y: +28px
-   to:
-     opacity: 1  filter: blur(0px)   y: 0
-   with a per-word stagger of 80ms for a fluid cascade.
+   Scroll-Triggered Character Text Reveal — GSAP ScrollTrigger + SplitType
+   
+   Splits headings into words and characters using SplitType.
+   Each word container has `overflow: hidden`, serving as a masked boundary.
+   As the heading scrolls into view, ScrollTrigger animates each character
+   from below the mask (translateY: 115%, opacity: 0 -> translateY: 0, opacity: 1)
+   with a staggered delay, creating a fluid cinematic text entry.
    ========================================================================== */
-(function headingBlurReveal() {
-  /* Bail gracefully if GSAP / ScrollTrigger didn’t load */
-  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
-    /* Fallback: show all words immediately so content is never hidden */
-    document.querySelectorAll('.hfr-inner').forEach(el => {
-      el.style.opacity = '1';
-      el.style.filter  = 'none';
-    });
+(function initSplitTextReveal() {
+  'use strict';
+
+  // Check prefers-reduced-motion
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     return;
   }
 
-  gsap.registerPlugin(ScrollTrigger);
-
-  const headings = document.querySelectorAll('.section-title');
-  if (!headings.length) return;
-
-  /* ── Word splitter — identical DOM output to the previous implementation ── */
-  function splitHeading(heading) {
-    const childNodes = Array.from(heading.childNodes);
-    heading.innerHTML = '';
-    let wordIdx = 0;
-
-    function makeWordSpan(textContent, tagName, className) {
-      const wrap  = document.createElement('span');
-      wrap.className = 'hfr-wrap';
-
-      const inner = document.createElement('span');
-      inner.className  = 'hfr-inner';
-      /* Store index for debugging / future CSS stagger fallback */
-      inner.dataset.wi = wordIdx++;
-
-      if (tagName) {
-        const tag = document.createElement(tagName);
-        if (className) tag.className = className;
-        tag.textContent = textContent;
-        inner.appendChild(tag);
-      } else {
-        inner.textContent = textContent;
-      }
-
-      wrap.appendChild(inner);
-      return wrap;
+  function setup() {
+    // Graceful fallback if libraries are not yet available
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined' || typeof SplitType === 'undefined') {
+      return;
     }
 
-    childNodes.forEach(node => {
-      if (node.nodeType === Node.TEXT_NODE) {
-        node.textContent.split(/(\s+)/).forEach(part => {
-          if (!part) return;
-          if (/^\s+$/.test(part)) heading.appendChild(document.createTextNode(part));
-          else heading.appendChild(makeWordSpan(part, null, null));
+    gsap.registerPlugin(ScrollTrigger);
+
+    const headings = document.querySelectorAll('.section-title, .social-strip-title, [data-split-reveal]');
+    if (!headings.length) return;
+
+    headings.forEach((heading) => {
+      // Split heading into words and characters
+      const split = new SplitType(heading, {
+        types: 'words, chars',
+        tagName: 'span'
+      });
+
+      if (!split.chars || !split.chars.length) return;
+
+      // Ensure each word container acts as an overflow-hidden mask
+      if (split.words && split.words.length) {
+        split.words.forEach((word) => {
+          word.style.display = 'inline-block';
+          word.style.overflow = 'hidden';
+          word.style.verticalAlign = 'baseline';
         });
-      } else if (node.nodeType === Node.ELEMENT_NODE) {
-        if (node.tagName === 'BR') {
-          heading.appendChild(document.createElement('br'));
-        } else {
-          node.textContent.split(/(\s+)/).forEach(part => {
-            if (!part) return;
-            if (/^\s+$/.test(part)) heading.appendChild(document.createTextNode(part));
-            else heading.appendChild(makeWordSpan(part, node.tagName, node.className || null));
+      }
+
+      // Initial state: masked below and transparent
+      gsap.set(split.chars, {
+        y: '115%',
+        opacity: 0,
+        display: 'inline-block',
+        willChange: 'transform, opacity'
+      });
+
+      // ScrollTrigger: fluid cinematic character entry
+      ScrollTrigger.create({
+        trigger: heading,
+        start: 'top 85%',
+        once: true,
+        onEnter: () => {
+          gsap.to(split.chars, {
+            y: '0%',
+            opacity: 1,
+            duration: 0.8,
+            ease: 'power3.out',
+            stagger: 0.022, // slight stagger delay per character for fluid wave
+            clearProps: 'willChange'
           });
         }
-      }
+      });
     });
+
+    ScrollTrigger.refresh();
   }
 
-  /* ── Split all headings, then set GSAP initial state ───────────────────── */
-  headings.forEach(h => splitHeading(h));
-
-  /* Pin every word in its blurred-out starting state before ScrollTrigger fires */
-  gsap.set('.hfr-inner', {
-    opacity: 0,
-    filter:  'blur(10px)',
-    y:       28
-  });
-
-  /* ── Per-heading ScrollTrigger — fires once as heading enters viewport ─── */
-  headings.forEach(heading => {
-    const words = heading.querySelectorAll('.hfr-inner');
-
-    ScrollTrigger.create({
-      trigger:  heading,
-      start:    'top 82%',       /* fire when heading top is 82% from viewport top */
-      once:     true,            /* each heading animates only once */
-      onEnter: () => {
-        gsap.to(words, {
-          opacity:  1,
-          filter:   'blur(0px)',
-          y:        0,
-          duration: 0.9,
-          ease:     'power3.out',
-          stagger:  0.08         /* 80ms cascade between successive words */
-        });
-      }
-    });
-  });
+  // Execute after fonts are loaded to ensure precise bounding metrics
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(setup);
+  } else {
+    window.addEventListener('load', setup);
+  }
 })();
 
 

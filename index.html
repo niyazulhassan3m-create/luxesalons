@@ -878,27 +878,17 @@
     </a>
   </div>
 
-  <!-- Stationary Gold Shine Aura for Scissor Cursor -->
-  <div class="cursor-gold-shine" id="cursorGoldShine" aria-hidden="true">
-    <div class="scissor-shine-core">
-      <!-- Ambient Golden Halo / Glow -->
-      <div class="shine-ambient-glow"></div>
-      <!-- Razor Blade Specular Sheen Beam -->
-      <div class="shine-blade-sweep"></div>
-      <!-- Center Pivot Star Glint -->
-      <div class="shine-star-glint glint-pivot"></div>
-      <!-- Blade Tip Diamond Star Glint -->
-      <div class="shine-star-glint glint-tip"></div>
-      <!-- Golden Orbiting Sparkles -->
-      <span class="shine-sparkle-speck speck-1">✦</span>
-      <span class="shine-sparkle-speck speck-2">✨</span>
-      <span class="shine-sparkle-speck speck-3">⋆</span>
-    </div>
-  </div>
 
-  <!-- GSAP core + ScrollTrigger (required for heading blur-to-focus reveal) -->
+  <!-- GSAP core + ScrollTrigger -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <!-- SplitType library for character-level masked reveal -->
+  <script src="https://unpkg.com/split-type"></script>
+  <script>
+    if (typeof SplitType === 'undefined') {
+      document.write('<script src="js/split-type.min.js"><\/script>');
+    }
+  </script>
   <script src="js/main.js"></script>
 </body>
 </html>
