@@ -2735,50 +2735,10 @@ body.portal-locked {
   }
 }
 
-/* ==========================================================================
-   SplitType Masked Character Text Reveal — GSAP ScrollTrigger
-   Each character smoothly fades up from a masked container with slight stagger
-   ========================================================================== */
-
-/* Word acts as the masked overflow container for each character */
-.section-title .word,
-.social-strip-title .word,
-[data-split-reveal] .word {
-  display: inline-block;
-  overflow: hidden;
-  vertical-align: baseline;
-  /* Descender buffer so letters like g, y, j, p, q are never clipped */
-  padding-bottom: 0.12em;
-  margin-bottom: -0.12em;
-  padding-top: 0.04em;
-  margin-top: -0.04em;
-  line-height: 1.16;
-}
-
-/* Individual character element */
-.section-title .char,
-.social-strip-title .char,
-[data-split-reveal] .char {
-  display: inline-block;
-  will-change: transform, opacity;
-}
-
 /* Reduced-motion: bypass animations and display text immediately */
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
   html { scroll-behavior: auto; }
   .scroll-cue-line { animation: none; }
   .mall-portal { display: none !important; }
-  .section-title .word,
-  .social-strip-title .word,
-  [data-split-reveal] .word {
-    overflow: visible !important;
-  }
-  .section-title .char,
-  .social-strip-title .char,
-  [data-split-reveal] .char {
-    opacity: 1 !important;
-    transform: none !important;
-    will-change: auto !important;
-  }
 }
