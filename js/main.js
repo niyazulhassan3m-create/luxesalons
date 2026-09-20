@@ -89,7 +89,7 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   setTimeout(reposition, 350);
 
   // ScrollSpy to automatically glide pill as visitor browses sections
-  const sectionIds = ["about", "leadership", "experience", "why", "models", "testimonials", "contact"];
+  const sectionIds = ["about", "leadership", "experience", "gallery", "why", "models", "testimonials", "contact"];
   const sections = sectionIds
     .map((id) => document.getElementById(id))
     .filter(Boolean);
@@ -555,5 +555,152 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
       card.style.setProperty("--mouse-x", "50%");
       card.style.setProperty("--mouse-y", "50%");
     });
+  });
+})();
+
+/* ==========================================================================
+   Interactive Gallery Filter & Fullscreen Lightbox Engine
+   ========================================================================== */
+(function initGallery() {
+  const filterBtns = document.querySelectorAll(".gallery-filter-btn");
+  const galleryCards = Array.from(document.querySelectorAll(".gallery-card"));
+  const lightbox = document.getElementById("galleryLightbox");
+  if (!galleryCards.length || !lightbox) return;
+
+  const backdrop = document.getElementById("lightboxBackdrop");
+  const closeBtn = document.getElementById("lightboxCloseBtn");
+  const prevBtn = document.getElementById("lightboxPrevBtn");
+  const nextBtn = document.getElementById("lightboxNextBtn");
+  const imgEl = document.getElementById("lightboxImg");
+  const titleEl = document.getElementById("lightboxTitle");
+  const captionEl = document.getElementById("lightboxCaption");
+  const badgeEl = document.getElementById("lightboxBadge");
+  const counterEl = document.getElementById("lightboxCounter");
+
+  // Extract metadata for all cards
+  const items = galleryCards.map((card, idx) => {
+    const img = card.querySelector("img");
+    const badge = card.querySelector(".gallery-badge");
+    const title = card.querySelector(".gallery-card-title");
+    const desc = card.querySelector(".gallery-card-desc");
+
+    return {
+      index: idx,
+      element: card,
+      category: card.getAttribute("data-category") || "all",
+      src: img ? img.src : "",
+      alt: img ? img.alt : "Luxe Men Salon Gallery",
+      badge: badge ? badge.textContent.replace("✦", "").trim() : "Showcase",
+      title: title ? title.textContent.trim() : "Luxe Men Salon",
+      desc: desc ? desc.textContent.trim() : "",
+    };
+  });
+
+  let currentFilteredItems = [...items];
+  let activeLightboxIndex = 0;
+
+  // Filter interaction
+  filterBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const filter = btn.getAttribute("data-filter");
+      filterBtns.forEach((b) => {
+        b.classList.remove("active");
+        b.setAttribute("aria-selected", "false");
+      });
+      btn.classList.add("active");
+      btn.setAttribute("aria-selected", "true");
+
+      currentFilteredItems = [];
+      galleryCards.forEach((card) => {
+        const cat = card.getAttribute("data-category");
+        const match = filter === "all" || cat === filter;
+        if (match) {
+          card.classList.remove("hidden");
+          const item = items.find((it) => it.element === card);
+          if (item) currentFilteredItems.push(item);
+        } else {
+          card.classList.add("hidden");
+        }
+      });
+    });
+  });
+
+  // Open Lightbox for specific item
+  function openLightbox(item) {
+    const activeIdxInFiltered = currentFilteredItems.findIndex((it) => it.index === item.index);
+    activeLightboxIndex = activeIdxInFiltered >= 0 ? activeIdxInFiltered : 0;
+    renderLightboxItem();
+    lightbox.classList.add("active");
+    lightbox.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove("active");
+    lightbox.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  }
+
+  function renderLightboxItem() {
+    if (!currentFilteredItems.length) return;
+    const current = currentFilteredItems[activeLightboxIndex];
+    if (!current) return;
+
+    if (imgEl) {
+      imgEl.classList.add("loading");
+      imgEl.src = current.src;
+      imgEl.alt = current.alt;
+      imgEl.onload = () => imgEl.classList.remove("loading");
+    }
+    if (titleEl) titleEl.textContent = current.title;
+    if (captionEl) captionEl.textContent = current.desc;
+    if (badgeEl) badgeEl.textContent = current.badge;
+    if (counterEl) {
+      const curNum = String(activeLightboxIndex + 1).padStart(2, "0");
+      const totalNum = String(currentFilteredItems.length).padStart(2, "0");
+      counterEl.textContent = `${curNum} / ${totalNum}`;
+    }
+  }
+
+  function showNext() {
+    if (!currentFilteredItems.length) return;
+    activeLightboxIndex = (activeLightboxIndex + 1) % currentFilteredItems.length;
+    renderLightboxItem();
+  }
+
+  function showPrev() {
+    if (!currentFilteredItems.length) return;
+    activeLightboxIndex = (activeLightboxIndex - 1 + currentFilteredItems.length) % currentFilteredItems.length;
+    renderLightboxItem();
+  }
+
+  // Card click triggers
+  galleryCards.forEach((card) => {
+    card.addEventListener("click", () => {
+      const idx = parseInt(card.getAttribute("data-index"), 10);
+      const target = items.find((it) => it.index === idx);
+      if (target) openLightbox(target);
+    });
+
+    card.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        card.click();
+      }
+    });
+  });
+
+  // Modal event listeners
+  if (closeBtn) closeBtn.addEventListener("click", closeLightbox);
+  if (backdrop) backdrop.addEventListener("click", closeLightbox);
+  if (nextBtn) nextBtn.addEventListener("click", (e) => { e.stopPropagation(); showNext(); });
+  if (prevBtn) prevBtn.addEventListener("click", (e) => { e.stopPropagation(); showPrev(); });
+
+  // Keyboard navigation
+  window.addEventListener("keydown", (e) => {
+    if (!lightbox.classList.contains("active")) return;
+    if (e.key === "Escape") closeLightbox();
+    else if (e.key === "ArrowRight") showNext();
+    else if (e.key === "ArrowLeft") showPrev();
   });
 })();
