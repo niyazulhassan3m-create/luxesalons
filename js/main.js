@@ -704,3 +704,101 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
     else if (e.key === "ArrowLeft") showPrev();
   });
 })();
+
+/**
+ * Auto-expiring Opening Dates Engine
+ * Automatically detects any salon branch, marquee pill, or badge with an opening date.
+ * If the current date has crossed (passed) the specified opening date, the date/badge is automatically removed,
+ * seamlessly transitioning the location into an active, operational branch.
+ */
+(function autoExpireOpeningDates() {
+  const MONTH_MAP = {
+    jan: 0, january: 0,
+    feb: 1, february: 1,
+    mar: 2, march: 2,
+    apr: 3, april: 3,
+    may: 4,
+    jun: 5, june: 5,
+    jul: 6, july: 6,
+    aug: 7, august: 7,
+    sep: 8, sept: 8, september: 8,
+    oct: 9, october: 9,
+    nov: 10, november: 10,
+    dec: 11, december: 11
+  };
+
+  function parseDateText(text, explicitDateStr) {
+    if (explicitDateStr) {
+      const parsed = new Date(explicitDateStr);
+      if (!isNaN(parsed.getTime())) {
+        if (explicitDateStr.length <= 10) parsed.setHours(23, 59, 59, 999);
+        return parsed;
+      }
+    }
+    if (!text) return null;
+    // Matches: "Opening on 1 January", "Opening 1st Jan", "Opens 15th Oct", "1 January", etc.
+    const match = text.match(/(?:opening|opens|launch)?\s*(?:on)?\s*(\d{1,2})(?:st|nd|rd|th)?\s+([A-Za-z]+)(?:\s+(\d{4}))?/i) ||
+                  text.match(/(?:opening|opens|launch)?\s*(?:on)?\s*([A-Za-z]+)\s+(\d{1,2})(?:st|nd|rd|th)?(?:\s+(\d{4}))?/i);
+    if (!match) return null;
+    let day, monthName, year;
+    const now = new Date();
+    if (isNaN(parseInt(match[1], 10))) {
+      monthName = match[1].toLowerCase();
+      day = parseInt(match[2], 10);
+      year = match[3] ? parseInt(match[3], 10) : null;
+    } else {
+      day = parseInt(match[1], 10);
+      monthName = match[2].toLowerCase();
+      year = match[3] ? parseInt(match[3], 10) : null;
+    }
+    if (!MONTH_MAP.hasOwnProperty(monthName) || isNaN(day) || day < 1 || day > 31) return null;
+
+    const monthIndex = MONTH_MAP[monthName];
+    if (!year) {
+      year = now.getFullYear();
+      // If the announced month is earlier than the current month (e.g. "January" when we are in September), it refers to the upcoming year!
+      if (monthIndex < now.getMonth()) {
+        year += 1;
+      }
+    }
+    return new Date(year, monthIndex, day, 23, 59, 59, 999);
+  }
+
+  function checkAndExpire() {
+    const now = new Date();
+
+    // 1. Elements with explicit data-opening-date
+    document.querySelectorAll("[data-opening-date]").forEach((el) => {
+      const date = parseDateText(el.textContent, el.getAttribute("data-opening-date"));
+      if (date && now >= date) {
+        if (el.classList.contains("city-badge")) {
+          el.remove();
+        } else {
+          el.removeAttribute("data-opening-date");
+          el.textContent = el.textContent.replace(/(?:opening|opens|launch)?\s*\d{1,2}(?:st|nd|rd|th)?\s+[A-Za-z]+(?:\s+\d{4})?/gi, "").trim();
+        }
+      }
+    });
+
+    // 2. City badges with date in text (e.g. "Opening 12th Sep", "Opening 13th Sep")
+    document.querySelectorAll(".city-badge").forEach((badge) => {
+      const text = badge.textContent.trim();
+      // Skip non-date badges like "Opening Soon", "On Process", "International"
+      if (/soon|process|international/i.test(text)) return;
+
+      const date = parseDateText(text);
+      if (date && now >= date) {
+        badge.remove();
+      }
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", checkAndExpire);
+  } else {
+    checkAndExpire();
+  }
+
+  // Periodic check once per hour
+  setInterval(checkAndExpire, 60 * 60 * 1000);
+})();
