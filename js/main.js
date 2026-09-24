@@ -802,3 +802,206 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   // Periodic check once per hour
   setInterval(checkAndExpire, 60 * 60 * 1000);
 })();
+
+/* ==========================================================================
+   Luxe AI Concierge — Chat Widget Engine
+   ========================================================================== */
+(function luxeConcierge() {
+  const chat      = document.getElementById("luxeChat");
+  const toggle    = document.getElementById("luxeChatToggle");
+  const panel     = document.getElementById("luxeChatPanel");
+  const closeBtn  = document.getElementById("luxeChatClose");
+  const messages  = document.getElementById("luxeChatMessages");
+  const input     = document.getElementById("luxeChatInput");
+  const sendBtn   = document.getElementById("luxeChatSend");
+  const qrWrap    = document.getElementById("luxeChatQuickReplies");
+
+  if (!chat || !toggle || !panel) return;
+
+  // ── Knowledge Base ──────────────────────────────────────────────────────────
+  const KB = [
+    {
+      keys: ["invest", "model", "price", "cost", "package", "plan", "tier"],
+      ans: "We offer 7 tailored investment models — from <strong>The Essential</strong> (₹3–5L) to <strong>The Signature</strong> — each a complete turnkey setup. Which model would you like to explore?"
+    },
+    {
+      keys: ["franchise", "fee", "royalty", "upfront", "zero"],
+      ans: "Great news — Luxe Men Salon charges <strong>₹0 upfront franchise fee</strong>. Our only ongoing commitment is a modest monthly royalty starting at ₹5,000, giving you industry-leading margins from day one."
+    },
+    {
+      keys: ["start", "begin", "how", "process", "step", "join", "partner"],
+      ans: "Getting started is simple:<br>1. <strong>Inquiry</strong> — fill out our partnership form below<br>2. <strong>Discovery call</strong> — our team walks you through models<br>3. <strong>Site selection</strong> — we help pick the ideal location<br>4. <strong>Turnkey setup</strong> — full salon ready within weeks<br>5. <strong>Launch 🎉</strong>"
+    },
+    {
+      keys: ["location", "city", "where", "outlet", "branch", "open", "state"],
+      ans: "We are currently present in <strong>50+ locations</strong> across Tamil Nadu and beyond — including Theni, Dindigul, Coimbatore, Tirupur, Trichy, and our upcoming <strong>international launch in Malaysia</strong> on 1 Jan 2027!"
+    },
+    {
+      keys: ["profit", "revenue", "earn", "income", "return", "roi"],
+      ans: "Our franchise partners typically see <strong>strong margins</strong> thanks to zero franchise fees, premium pricing, and our loyal male clientele. Our team shares detailed P&L projections during your discovery call."
+    },
+    {
+      keys: ["support", "training", "help", "team", "staff"],
+      ans: "Luxe Men Salon provides <strong>full support</strong> — from site selection and interior design to staff training, marketing assets, and ongoing operational guidance. You're never alone."
+    },
+    {
+      keys: ["service", "grooming", "haircut", "beard", "treatment", "spa"],
+      ans: "We offer a curated menu of <strong>premium men's grooming services</strong>: precision haircuts, royal beard trims, scalp treatments, facials, hot towel shaves, and more — all delivered in a luxury salon environment."
+    },
+    {
+      keys: ["contact", "call", "phone", "whatsapp", "email", "reach"],
+      ans: "You can reach our partnership team at <strong>+91 96264 58516</strong> or message us on WhatsApp. Alternatively, scroll down to our <strong>Contact</strong> section to submit an inquiry directly."
+    },
+    {
+      keys: ["founder", "owner", "zawith", "ceo", "who"],
+      ans: "Luxe Men Salon was founded by <strong>Zawith Ahamed.N</strong>, who established the brand in <strong>October 2022</strong> with a vision to redefine men's grooming through luxury, accessibility, and franchise excellence."
+    },
+    {
+      keys: ["malaysia", "international", "abroad", "global", "overseas"],
+      ans: "Yes! Luxe Men Salon is going international — our first overseas outlet launches in <strong>Malaysia on 1 January 2027</strong>, marking a proud milestone in our global expansion."
+    },
+  ];
+
+  // ── Greeting ────────────────────────────────────────────────────────────────
+  const GREETING = "Welcome to <strong>Luxe Men Salon</strong> ✦<br><br>I'm your personal AI Concierge. Whether you're exploring franchise opportunities, investment models, or simply curious about us — ask me anything, and I'll guide you.";
+
+  // ── Helpers ─────────────────────────────────────────────────────────────────
+  let greetingShown = false;
+
+  function scrollBottom() {
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  function createBubble(text, role) {
+    const wrap = document.createElement("div");
+    wrap.className = "luxe-msg " + role;
+
+    if (role === "ai") {
+      const avatar = document.createElement("div");
+      avatar.className = "luxe-msg-avatar";
+      avatar.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="#D4AF37" stroke-width="2" stroke-linejoin="round" fill="rgba(212,175,55,0.15)"/></svg>`;
+      wrap.appendChild(avatar);
+    }
+
+    const bubble = document.createElement("div");
+    bubble.className = "luxe-msg-bubble";
+    bubble.innerHTML = text;
+    wrap.appendChild(bubble);
+    return wrap;
+  }
+
+  function showTyping() {
+    const wrap = document.createElement("div");
+    wrap.className = "luxe-msg ai";
+    wrap.id = "luxe-typing";
+
+    const avatar = document.createElement("div");
+    avatar.className = "luxe-msg-avatar";
+    avatar.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="#D4AF37" stroke-width="2" stroke-linejoin="round" fill="rgba(212,175,55,0.15)"/></svg>`;
+
+    const bubble = document.createElement("div");
+    bubble.className = "luxe-msg-bubble";
+    bubble.innerHTML = `<div class="luxe-typing-dots"><span></span><span></span><span></span></div>`;
+
+    wrap.appendChild(avatar);
+    wrap.appendChild(bubble);
+    messages.appendChild(wrap);
+    scrollBottom();
+    return wrap;
+  }
+
+  function removeTyping() {
+    const t = document.getElementById("luxe-typing");
+    if (t) t.remove();
+  }
+
+  function getReply(text) {
+    const lower = text.toLowerCase();
+    for (const entry of KB) {
+      if (entry.keys.some(k => lower.includes(k))) return entry.ans;
+    }
+    return "Great question! For detailed information, I'd recommend speaking with our partnership team directly at <strong>+91 96264 58516</strong> or using our contact form below — they'll be happy to assist you.";
+  }
+
+  function postAI(text, delay = 900) {
+    const typing = showTyping();
+    return new Promise(resolve => {
+      setTimeout(() => {
+        typing.remove();
+        const bubble = createBubble(text, "ai");
+        messages.appendChild(bubble);
+        scrollBottom();
+        resolve();
+      }, delay);
+    });
+  }
+
+  function postUser(text) {
+    const bubble = createBubble(text, "user");
+    messages.appendChild(bubble);
+    scrollBottom();
+  }
+
+  async function handleSend(text) {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+    input.value = "";
+    qrWrap.style.display = "none";
+    postUser(trimmed);
+    await postAI(getReply(trimmed));
+  }
+
+  // ── Open / Close ─────────────────────────────────────────────────────────────
+  function openChat() {
+    chat.classList.add("open");
+    toggle.setAttribute("aria-expanded", "true");
+    panel.setAttribute("aria-hidden", "false");
+
+    if (!greetingShown) {
+      greetingShown = true;
+      postAI(GREETING, 600);
+    }
+
+    setTimeout(() => input.focus(), 400);
+  }
+
+  function closeChat() {
+    chat.classList.remove("open");
+    toggle.setAttribute("aria-expanded", "false");
+    panel.setAttribute("aria-hidden", "true");
+  }
+
+  // ── Events ────────────────────────────────────────────────────────────────
+  toggle.addEventListener("click", () => {
+    chat.classList.contains("open") ? closeChat() : openChat();
+  });
+
+  closeBtn.addEventListener("click", closeChat);
+
+  sendBtn.addEventListener("click", () => handleSend(input.value));
+
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend(input.value);
+    }
+  });
+
+  // Quick reply chips
+  qrWrap.addEventListener("click", (e) => {
+    const btn = e.target.closest(".luxe-qr-btn");
+    if (btn) handleSend(btn.getAttribute("data-msg"));
+  });
+
+  // Close on outside click
+  document.addEventListener("click", (e) => {
+    if (chat.classList.contains("open") && !chat.contains(e.target)) {
+      closeChat();
+    }
+  });
+
+  // Escape key
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && chat.classList.contains("open")) closeChat();
+  });
+})();
