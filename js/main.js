@@ -1,4 +1,4 @@
-const SUPABASE_URL = "";
+﻿const SUPABASE_URL = "";
 const SUPABASE_ANON_KEY = "";
 const SUBMISSIONS_TABLE = "partnership_inquiries";
 
@@ -804,89 +804,152 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 })();
 
 /* ==========================================================================
-   Luxe AI Concierge — Chat Widget Engine
+   Luxe AI Concierge — Full Persona & Conversation Engine  v2.0
+   Role: Elite business & customer service assistant for Luxe Men Salon
    ========================================================================== */
 (function luxeConcierge() {
-  const chat      = document.getElementById("luxeChat");
-  const toggle    = document.getElementById("luxeChatToggle");
-  const panel     = document.getElementById("luxeChatPanel");
-  const closeBtn  = document.getElementById("luxeChatClose");
-  const messages  = document.getElementById("luxeChatMessages");
-  const input     = document.getElementById("luxeChatInput");
-  const sendBtn   = document.getElementById("luxeChatSend");
-  const qrWrap    = document.getElementById("luxeChatQuickReplies");
+  "use strict";
+
+  const chat     = document.getElementById("luxeChat");
+  const toggle   = document.getElementById("luxeChatToggle");
+  const panel    = document.getElementById("luxeChatPanel");
+  const closeBtn = document.getElementById("luxeChatClose");
+  const msgBox   = document.getElementById("luxeChatMessages");
+  const input    = document.getElementById("luxeChatInput");
+  const sendBtn  = document.getElementById("luxeChatSend");
+  const qrWrap   = document.getElementById("luxeChatQuickReplies");
 
   if (!chat || !toggle || !panel) return;
 
-  // ── Knowledge Base ──────────────────────────────────────────────────────────
+  // ─────────────────────────────────────────────────────────────────────────
+  // PERSONA & CONTENT
+  // ─────────────────────────────────────────────────────────────────────────
+  const PERSONA_NAME = "Luxe Concierge";
+
+  const GREETING =
+    "Good day! Welcome to <strong>Luxe Men Salon</strong> ✦<br><br>" +
+    "I'm your personal <strong>Luxe Concierge</strong> — here to assist you with anything from our premium grooming services to exploring our highly lucrative <strong>Turnkey Franchise Opportunity</strong>.<br><br>" +
+    "How may I assist you today?";
+
+  const SERVICES_INFO =
+    "<strong>✦ Our Premium Grooming Services</strong><br><br>" +
+    "• <strong>Signature Haircuts</strong> — Precision styling by expert barbers<br>" +
+    "• <strong>Royal Beard Trim</strong> — Sculpted, defined, perfected<br>" +
+    "• <strong>Hot Towel Shave</strong> — The ultimate classic gentlemen's ritual<br>" +
+    "• <strong>Scalp Treatments</strong> — Therapeutic, rejuvenating care<br>" +
+    "• <strong>Luxury Facials</strong> — Deep cleanse & skin revival<br>" +
+    "• <strong>Hair Colour & Highlights</strong> — Refined, modern tones<br>" +
+    "• <strong>De-Tan & Skin Brightening</strong> — Radiant, refreshed finish<br><br>" +
+    "Would you like to <strong>book an appointment</strong> at your nearest Luxe salon?";
+
+  const FRANCHISE_INTRO =
+    "<strong>✦ Luxe Men Salon — Turnkey Franchise Opportunity</strong><br><br>" +
+    "You've made an excellent choice to explore one of India's fastest-growing men's salon brands.<br><br>" +
+    "<strong>Why Luxe?</strong><br>" +
+    "• ₹<strong>0 Franchise Fee</strong> — Zero upfront brand fee<br>" +
+    "• <strong>7 Investment Models</strong> — ₹3L to ₹25L+ to suit every budget<br>" +
+    "• <strong>Complete Turnkey Setup</strong> — Interior, equipment & branding handled<br>" +
+    "• <strong>Full Operational Support</strong> — Training, marketing & ongoing guidance<br>" +
+    "• <strong>50+ Outlets</strong> across Tamil Nadu & expanding globally<br><br>" +
+    "To connect you with our senior <strong>Business Development Team</strong>, I'll need a few quick details.<br><br>" +
+    "May I start with your <strong>full name</strong>, please?";
+
+  const APPOINTMENT_INTRO =
+    "Wonderful! I'd be delighted to help you book a grooming session at your nearest Luxe Men Salon.<br><br>" +
+    "To get started, could you please share your <strong>name</strong> and the <strong>city</strong> you're in?";
+
+  const FALLBACK =
+    "Thank you for reaching out. I want to make sure you receive the right assistance.<br><br>" +
+    "Are you visiting us as a <strong>grooming client</strong> looking to book an appointment, or are you interested in our <strong>franchise opportunity</strong>?";
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // KNOWLEDGE BASE (keyword replies — for general queries)
+  // ─────────────────────────────────────────────────────────────────────────
   const KB = [
     {
-      keys: ["invest", "model", "price", "cost", "package", "plan", "tier"],
-      ans: "We offer 7 tailored investment models — from <strong>The Essential</strong> (₹3–5L) to <strong>The Signature</strong> — each a complete turnkey setup. Which model would you like to explore?"
+      keys: ["location", "city", "where", "outlet", "branch", "state", "near"],
+      ans: "We currently have <strong>50+ outlets</strong> across Tamil Nadu — including Theni, Dindigul, Madurai, Coimbatore, Tirupur, Anthiyur, Singampunari, Trichy, Velayuthapalayam, and many more.<br><br>We're also launching internationally in <strong>Malaysia</strong> on 1 Jan 2027! Would you like to find your nearest salon?"
     },
     {
-      keys: ["franchise", "fee", "royalty", "upfront", "zero"],
-      ans: "Great news — Luxe Men Salon charges <strong>₹0 upfront franchise fee</strong>. Our only ongoing commitment is a modest monthly royalty starting at ₹5,000, giving you industry-leading margins from day one."
+      keys: ["founder", "owner", "zawith", "ceo", "established", "started"],
+      ans: "Luxe Men Salon was founded by <strong>Zawith Ahamed.N</strong> in <strong>October 2022</strong> with a powerful vision — to redefine the men's grooming experience through luxury, consistency, and scalable franchise excellence."
     },
     {
-      keys: ["start", "begin", "how", "process", "step", "join", "partner"],
-      ans: "Getting started is simple:<br>1. <strong>Inquiry</strong> — fill out our partnership form below<br>2. <strong>Discovery call</strong> — our team walks you through models<br>3. <strong>Site selection</strong> — we help pick the ideal location<br>4. <strong>Turnkey setup</strong> — full salon ready within weeks<br>5. <strong>Launch 🎉</strong>"
+      keys: ["invest", "cost", "model", "price", "budget", "tier", "plan", "package", "amount"],
+      ans: "<strong>✦ Investment Models at a Glance</strong><br><br>Luxe offers <strong>7 flexible investment tiers</strong> starting from ₹3 Lakhs all the way to our premium <strong>Signature Model</strong> at ₹25L+, each inclusive of complete turnkey setup.<br><br>All models include interior design, branding, equipment, staff training, and launch support — with <strong>₹0 franchise fee</strong>.<br><br>Shall I connect you with our Business Development Team for a detailed proposal?"
     },
     {
-      keys: ["location", "city", "where", "outlet", "branch", "open", "state"],
-      ans: "We are currently present in <strong>50+ locations</strong> across Tamil Nadu and beyond — including Theni, Dindigul, Coimbatore, Tirupur, Trichy, and our upcoming <strong>international launch in Malaysia</strong> on 1 Jan 2027!"
+      keys: ["royalty", "fee", "monthly", "upfront", "charge", "zero"],
+      ans: "Great news — Luxe Men Salon charges <strong>absolutely ₹0 upfront franchise fee</strong>. The only ongoing commitment is a nominal monthly royalty from ₹5,000, ensuring industry-leading profit margins for our partners."
     },
     {
-      keys: ["profit", "revenue", "earn", "income", "return", "roi"],
-      ans: "Our franchise partners typically see <strong>strong margins</strong> thanks to zero franchise fees, premium pricing, and our loyal male clientele. Our team shares detailed P&L projections during your discovery call."
+      keys: ["support", "training", "help", "guide", "staff", "operation"],
+      ans: "Our franchise partners receive <strong>end-to-end support</strong>:<br>• Site identification & lease negotiation guidance<br>• Premium interior design & setup<br>• Comprehensive staff training programs<br>• Marketing collateral & brand assets<br>• Ongoing operational mentorship<br><br>You are <em>never</em> on your own with Luxe."
     },
     {
-      keys: ["support", "training", "help", "team", "staff"],
-      ans: "Luxe Men Salon provides <strong>full support</strong> — from site selection and interior design to staff training, marketing assets, and ongoing operational guidance. You're never alone."
+      keys: ["profit", "revenue", "earn", "income", "return", "roi", "margin"],
+      ans: "Our franchise partners consistently achieve <strong>strong monthly revenues</strong> driven by high footfall, premium pricing, and repeat clientele. Detailed P&L projections are shared during your personalised discovery call with our Business Development Team."
     },
     {
-      keys: ["service", "grooming", "haircut", "beard", "treatment", "spa"],
-      ans: "We offer a curated menu of <strong>premium men's grooming services</strong>: precision haircuts, royal beard trims, scalp treatments, facials, hot towel shaves, and more — all delivered in a luxury salon environment."
+      keys: ["malaysia", "international", "global", "abroad", "overseas", "expand"],
+      ans: "Yes! Luxe Men Salon is proud to announce its <strong>first international outlet in Malaysia</strong>, opening <strong>1 January 2027</strong> — a landmark moment in our global expansion story."
     },
     {
-      keys: ["contact", "call", "phone", "whatsapp", "email", "reach"],
-      ans: "You can reach our partnership team at <strong>+91 96264 58516</strong> or message us on WhatsApp. Alternatively, scroll down to our <strong>Contact</strong> section to submit an inquiry directly."
+      keys: ["contact", "phone", "whatsapp", "number", "reach", "call", "email"],
+      ans: "You can reach our team directly:<br><br>📞 <strong>+91 96264 58516</strong><br>💬 WhatsApp the same number<br><br>Or use the <strong>Contact Form</strong> below on this page — our team typically responds within a few hours."
     },
     {
-      keys: ["founder", "owner", "zawith", "ceo", "who"],
-      ans: "Luxe Men Salon was founded by <strong>Zawith Ahamed.N</strong>, who established the brand in <strong>October 2022</strong> with a vision to redefine men's grooming through luxury, accessibility, and franchise excellence."
+      keys: ["appointment", "book", "slot", "visit", "schedule", "timing", "time", "hour"],
+      ans: "I'd love to help you book a session! Our salons are typically open <strong>9 AM – 9 PM</strong> daily.<br><br>Please share your <strong>name</strong> and <strong>city</strong>, and I'll guide you to your nearest Luxe outlet or connect you with the team for a confirmed booking."
     },
     {
-      keys: ["malaysia", "international", "abroad", "global", "overseas"],
-      ans: "Yes! Luxe Men Salon is going international — our first overseas outlet launches in <strong>Malaysia on 1 January 2027</strong>, marking a proud milestone in our global expansion."
+      keys: ["haircut", "hair", "beard", "shave", "facial", "skin", "scalp", "colour", "color", "detan", "groom"],
+      ans: SERVICES_INFO
     },
   ];
 
-  // ── Greeting ────────────────────────────────────────────────────────────────
-  const GREETING = "Welcome to <strong>Luxe Men Salon</strong> ✦<br><br>I'm your personal AI Concierge. Whether you're exploring franchise opportunities, investment models, or simply curious about us — ask me anything, and I'll guide you.";
+  // ─────────────────────────────────────────────────────────────────────────
+  // CONVERSATION STATE MACHINE
+  // ─────────────────────────────────────────────────────────────────────────
+  // States: idle | franchise_name | franchise_city | franchise_budget | franchise_phone
+  //         | appointment_name | appointment_city | done
+  const state = {
+    mode: "idle",       // current conversation flow
+    data: {}            // collected lead / appointment data
+  };
 
-  // ── Helpers ─────────────────────────────────────────────────────────────────
+  // Intent detection
+  function detectIntent(text) {
+    const t = text.toLowerCase();
+    if (/franchise|invest|partner|business|opportunit|turn.?key|outlet|open.+salon|own.+salon/.test(t)) return "franchise";
+    if (/book|appointment|visit|slot|grooming|haircut|beard|shave|facial|service|near/.test(t)) return "appointment";
+    return null;
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // DOM HELPERS
+  // ─────────────────────────────────────────────────────────────────────────
   let greetingShown = false;
 
   function scrollBottom() {
-    messages.scrollTop = messages.scrollHeight;
+    msgBox.scrollTop = msgBox.scrollHeight;
   }
 
-  function createBubble(text, role) {
+  function createBubble(html, role) {
     const wrap = document.createElement("div");
     wrap.className = "luxe-msg " + role;
 
     if (role === "ai") {
-      const avatar = document.createElement("div");
-      avatar.className = "luxe-msg-avatar";
-      avatar.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="#D4AF37" stroke-width="2" stroke-linejoin="round" fill="rgba(212,175,55,0.15)"/></svg>`;
-      wrap.appendChild(avatar);
+      const av = document.createElement("div");
+      av.className = "luxe-msg-avatar";
+      av.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="#D4AF37" stroke-width="2" stroke-linejoin="round" fill="rgba(212,175,55,0.15)"/></svg>`;
+      wrap.appendChild(av);
     }
 
-    const bubble = document.createElement("div");
-    bubble.className = "luxe-msg-bubble";
-    bubble.innerHTML = text;
-    wrap.appendChild(bubble);
+    const bub = document.createElement("div");
+    bub.className = "luxe-msg-bubble";
+    bub.innerHTML = html;
+    wrap.appendChild(bub);
     return wrap;
   }
 
@@ -895,41 +958,28 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
     wrap.className = "luxe-msg ai";
     wrap.id = "luxe-typing";
 
-    const avatar = document.createElement("div");
-    avatar.className = "luxe-msg-avatar";
-    avatar.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="#D4AF37" stroke-width="2" stroke-linejoin="round" fill="rgba(212,175,55,0.15)"/></svg>`;
+    const av = document.createElement("div");
+    av.className = "luxe-msg-avatar";
+    av.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="#D4AF37" stroke-width="2" stroke-linejoin="round" fill="rgba(212,175,55,0.15)"/></svg>`;
 
-    const bubble = document.createElement("div");
-    bubble.className = "luxe-msg-bubble";
-    bubble.innerHTML = `<div class="luxe-typing-dots"><span></span><span></span><span></span></div>`;
+    const bub = document.createElement("div");
+    bub.className = "luxe-msg-bubble";
+    bub.innerHTML = `<div class="luxe-typing-dots"><span></span><span></span><span></span></div>`;
 
-    wrap.appendChild(avatar);
-    wrap.appendChild(bubble);
-    messages.appendChild(wrap);
+    wrap.appendChild(av);
+    wrap.appendChild(bub);
+    msgBox.appendChild(wrap);
     scrollBottom();
     return wrap;
   }
 
-  function removeTyping() {
-    const t = document.getElementById("luxe-typing");
-    if (t) t.remove();
-  }
-
-  function getReply(text) {
-    const lower = text.toLowerCase();
-    for (const entry of KB) {
-      if (entry.keys.some(k => lower.includes(k))) return entry.ans;
-    }
-    return "Great question! For detailed information, I'd recommend speaking with our partnership team directly at <strong>+91 96264 58516</strong> or using our contact form below — they'll be happy to assist you.";
-  }
-
-  function postAI(text, delay = 900) {
+  function postAI(html, delay) {
+    delay = (delay === undefined) ? 900 : delay;
     const typing = showTyping();
-    return new Promise(resolve => {
-      setTimeout(() => {
+    return new Promise(function(resolve) {
+      setTimeout(function() {
         typing.remove();
-        const bubble = createBubble(text, "ai");
-        messages.appendChild(bubble);
+        msgBox.appendChild(createBubble(html, "ai"));
         scrollBottom();
         resolve();
       }, delay);
@@ -937,21 +987,134 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   }
 
   function postUser(text) {
-    const bubble = createBubble(text, "user");
-    messages.appendChild(bubble);
+    msgBox.appendChild(createBubble(text, "user"));
     scrollBottom();
   }
 
-  async function handleSend(text) {
-    const trimmed = text.trim();
+  function setInputHint(hint) {
+    input.placeholder = hint || "Type your message…";
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // CONVERSATION ROUTER
+  // ─────────────────────────────────────────────────────────────────────────
+  async function handleSend(raw) {
+    var trimmed = raw.trim();
     if (!trimmed) return;
     input.value = "";
     qrWrap.style.display = "none";
     postUser(trimmed);
-    await postAI(getReply(trimmed));
+
+    // ── Franchise lead collection flow ────────────────────────────────────
+    if (state.mode === "franchise_name") {
+      state.data.name = trimmed;
+      state.mode = "franchise_city";
+      setInputHint("Your city or district…");
+      await postAI(
+        "A pleasure to meet you, <strong>" + trimmed + "</strong>! ✦<br><br>" +
+        "Which <strong>city or district</strong> are you based in, or where are you looking to open your Luxe outlet?"
+      );
+      return;
+    }
+
+    if (state.mode === "franchise_city") {
+      state.data.city = trimmed;
+      state.mode = "franchise_budget";
+      setInputHint("e.g. ₹5–10 Lakhs, ₹15 Lakhs…");
+      await postAI(
+        "Excellent — <strong>" + trimmed + "</strong> is a promising market for Luxe Men Salon!<br><br>" +
+        "To recommend the most suitable investment model, could you please share your <strong>approximate investment budget</strong>?"
+      );
+      return;
+    }
+
+    if (state.mode === "franchise_budget") {
+      state.data.budget = trimmed;
+      state.mode = "franchise_phone";
+      setInputHint("10-digit mobile number…");
+      await postAI(
+        "Perfect. Finally, could you share your <strong>contact number</strong> so our senior Business Development Manager can reach you directly with a personalised proposal?"
+      );
+      return;
+    }
+
+    if (state.mode === "franchise_phone") {
+      state.data.phone = trimmed;
+      state.mode = "done";
+      setInputHint("Ask me anything else…");
+      var summary =
+        "<strong>✦ Your Details Received</strong><br><br>" +
+        "📋 <strong>Name:</strong> " + state.data.name + "<br>" +
+        "📍 <strong>City:</strong> " + state.data.city + "<br>" +
+        "💰 <strong>Budget:</strong> " + state.data.budget + "<br>" +
+        "📞 <strong>Contact:</strong> " + trimmed + "<br><br>" +
+        "Thank you, <strong>" + state.data.name + "</strong>! Our <strong>Business Development Team</strong> will contact you shortly at <strong>" + trimmed + "</strong> to walk you through our franchise models and next steps.<br><br>" +
+        "In the meantime, you are welcome to explore our website or WhatsApp us at <strong>+91 96264 58516</strong>. We look forward to welcoming you to the <em>Luxe family</em>! ✦";
+      await postAI(summary, 1100);
+      return;
+    }
+
+    // ── Appointment / grooming flow ────────────────────────────────────────
+    if (state.mode === "appointment_name") {
+      state.data.name = trimmed;
+      state.mode = "appointment_city";
+      setInputHint("Your city or area…");
+      await postAI(
+        "Wonderful, <strong>" + trimmed + "</strong>! Which <strong>city or area</strong> are you located in? I'll connect you with your nearest Luxe outlet."
+      );
+      return;
+    }
+
+    if (state.mode === "appointment_city") {
+      state.data.city = trimmed;
+      state.mode = "done";
+      setInputHint("Ask me anything else…");
+      await postAI(
+        "Thank you, <strong>" + state.data.name + "</strong>! ✦<br><br>" +
+        "We have Luxe Men Salon outlets serving <strong>" + trimmed + "</strong> and surrounding areas.<br><br>" +
+        "To confirm your appointment time and stylist preference, please WhatsApp us directly at:<br>" +
+        "💬 <strong>+91 96264 58516</strong><br><br>" +
+        "Simply mention your name and preferred date — our team will secure your slot immediately. We look forward to serving you!",
+        1000
+      );
+      return;
+    }
+
+    // ── Intent routing from idle ───────────────────────────────────────────
+    var intent = detectIntent(trimmed);
+
+    if (intent === "franchise") {
+      state.mode = "franchise_name";
+      state.data = {};
+      setInputHint("Your full name…");
+      await postAI(FRANCHISE_INTRO, 1000);
+      return;
+    }
+
+    if (intent === "appointment") {
+      state.mode = "appointment_name";
+      state.data = {};
+      setInputHint("Your full name…");
+      await postAI(APPOINTMENT_INTRO, 800);
+      return;
+    }
+
+    // ── Knowledge Base lookup ─────────────────────────────────────────────
+    var lower = trimmed.toLowerCase();
+    for (var i = 0; i < KB.length; i++) {
+      if (KB[i].keys.some(function(k) { return lower.includes(k); })) {
+        await postAI(KB[i].ans);
+        return;
+      }
+    }
+
+    // ── Fallback ─────────────────────────────────────────────────────────
+    await postAI(FALLBACK, 700);
   }
 
-  // ── Open / Close ─────────────────────────────────────────────────────────────
+  // ─────────────────────────────────────────────────────────────────────────
+  // OPEN / CLOSE
+  // ─────────────────────────────────────────────────────────────────────────
   function openChat() {
     chat.classList.add("open");
     toggle.setAttribute("aria-expanded", "true");
@@ -959,10 +1122,10 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
     if (!greetingShown) {
       greetingShown = true;
-      postAI(GREETING, 600);
+      postAI(GREETING, 700);
     }
 
-    setTimeout(() => input.focus(), 400);
+    setTimeout(function() { input.focus(); }, 420);
   }
 
   function closeChat() {
@@ -971,37 +1134,37 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
     panel.setAttribute("aria-hidden", "true");
   }
 
-  // ── Events ────────────────────────────────────────────────────────────────
-  toggle.addEventListener("click", () => {
+  // ─────────────────────────────────────────────────────────────────────────
+  // EVENT LISTENERS
+  // ─────────────────────────────────────────────────────────────────────────
+  toggle.addEventListener("click", function() {
     chat.classList.contains("open") ? closeChat() : openChat();
   });
 
   closeBtn.addEventListener("click", closeChat);
 
-  sendBtn.addEventListener("click", () => handleSend(input.value));
+  sendBtn.addEventListener("click", function() { handleSend(input.value); });
 
-  input.addEventListener("keydown", (e) => {
+  input.addEventListener("keydown", function(e) {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend(input.value);
     }
   });
 
-  // Quick reply chips
-  qrWrap.addEventListener("click", (e) => {
-    const btn = e.target.closest(".luxe-qr-btn");
-    if (btn) handleSend(btn.getAttribute("data-msg"));
+  qrWrap.addEventListener("click", function(e) {
+    var btn = e.target.closest(".luxe-qr-btn");
+    if (btn) handleSend(btn.dataset.msg || btn.textContent);
   });
 
-  // Close on outside click
-  document.addEventListener("click", (e) => {
+  document.addEventListener("click", function(e) {
     if (chat.classList.contains("open") && !chat.contains(e.target)) {
       closeChat();
     }
   });
 
-  // Escape key
-  document.addEventListener("keydown", (e) => {
+  document.addEventListener("keydown", function(e) {
     if (e.key === "Escape" && chat.classList.contains("open")) closeChat();
   });
+
 })();
