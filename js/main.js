@@ -13,8 +13,8 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   const pill = $("#navSlidingPill");
   const navItems = $$(".nav-item", capsule || document);
 
-  // Scroll effect for island glow & depth
-  const onScroll = () => navbar.classList.toggle("scrolled", window.scrollY > 40);
+  // Scroll effect for island glow & depth and floating sub-actions
+  const onScroll = () => navbar.classList.toggle("scrolled", window.scrollY > 25);
   onScroll();
   window.addEventListener("scroll", onScroll, { passive: true });
 
