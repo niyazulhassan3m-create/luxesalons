@@ -63,10 +63,12 @@
 
   <header class="nav" id="navbar">
     <div class="nav-inner nav-island-inner">
-      <!-- Segment 1: Brand -->
-      <div class="nav-segment nav-segment-brand">
-        <a href="#home" class="brand">
-          <img src="images/logo.png" alt="Luxe Men Salon Logo" class="brand-logo" />
+      <!-- Centered Brand (Oversized Logo & Luxe Men Salon) -->
+      <div class="nav-segment nav-segment-brand nav-brand-center">
+        <a href="#home" class="brand brand-center">
+          <div class="brand-logo-frame">
+            <img src="images/logo.png" alt="Luxe Men Salon Logo" class="brand-logo brand-logo-oversize" />
+          </div>
           <div class="brand-text">
             <span class="brand-name">LUXE&nbsp;MEN&nbsp;SALON</span>
             <span class="brand-caption">Love Is In The Hair</span>
@@ -74,15 +76,15 @@
         </a>
       </div>
 
-      <!-- Segment 2: Navigation Links with Sliding Pill Indicator -->
+      <!-- Segment 3: Navigation Links with Sliding Pill Indicator -->
       <nav class="nav-segment nav-segment-links" id="navLinks" aria-label="Primary Navigation">
         <div class="nav-capsule" id="navCapsule">
-          <div class="nav-sliding-pill" id="navSlidingPill" aria-hidden="true"></div>
           <a href="#about" class="nav-item active" data-nav="about"><span class="nav-item-text">About</span></a>
           <a href="#leadership" class="nav-item" data-nav="leadership"><span class="nav-item-text">Leadership</span></a>
           <a href="#experience" class="nav-item" data-nav="experience"><span class="nav-item-text">The Experience</span></a>
           <a href="#gallery" class="nav-item" data-nav="gallery"><span class="nav-item-text">Gallery</span></a>
           <a href="#why" class="nav-item" data-nav="why"><span class="nav-item-text">Why Us</span></a>
+          <div class="nav-brand-spacer" aria-hidden="true"></div>
           <a href="#models" class="nav-item" data-nav="models"><span class="nav-item-text">Investment Models</span></a>
           <a href="#testimonials" class="nav-item" data-nav="testimonials"><span class="nav-item-text">Testimonials</span></a>
           <a href="#contact" class="nav-item" data-nav="contact"><span class="nav-item-text">Contact</span></a>
@@ -106,19 +108,8 @@
         </div>
       </nav>
 
-      <!-- Segment 3: Quick Action Buttons (Direct Call + Partnership Inquiries) -->
+      <!-- Segment 4: Right Actions (Instagram, WhatsApp & Hamburger) -->
       <div class="nav-segment nav-segment-actions">
-        <!-- Direct Phone Calling Button -->
-        <a href="tel:+919626458516" class="nav-call-btn" title="Direct Phone Call: +91 9626458516" aria-label="Direct Phone Call: +91 9626458516">
-          <span class="nav-call-icon">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          </span>
-          <span class="nav-call-text">+91 9626458516</span>
-        </a>
-
-        <!-- Partnership Inquiries Button -->
-        <a href="#contact" class="btn btn-pill-gold nav-partner-btn">Partnership Inquiries</a>
-
         <!-- Instagram & WhatsApp Compact Buttons -->
         <div class="nav-icons-group">
           <a href="https://www.instagram.com/luxesalonz?utm_source=ig_web_button_share_sheet&stkn=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" class="nav-icon-btn nav-insta-btn" aria-label="Visit Luxe Men Salon on Instagram" title="Instagram @luxesalonz">
@@ -134,6 +125,14 @@
           <span></span><span></span><span></span>
         </button>
       </div>
+    </div>
+
+    <!-- Below Navbar Left Corner: Partnership Inquiries below logo -->
+    <div class="nav-sub-partner" id="navSubPartner">
+      <a href="#contact" class="btn btn-pill-gold nav-partner-below-btn">
+        <span class="partner-btn-dot">✦</span>
+        <span>Partnership Inquiries</span>
+      </a>
     </div>
   </header>
 

@@ -137,6 +137,8 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 
 .nav-inner.nav-island-inner {
   width: 100%;
+  position: relative;
+  overflow: visible;
   /* Rich dark theme (#0B0F19) with glassmorphic backing */
   background: rgba(11, 15, 25, 0.88);
   -webkit-backdrop-filter: blur(22px) saturate(190%);
@@ -174,111 +176,173 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   align-items: center;
 }
 
-/* Segment 1: Brand */
+/* Centered Brand (Oversized Logo & Luxe Men Salon) */
 .nav-segment-brand {
   flex-shrink: 0;
-  padding-right: 14px;
-  border-right: 1px solid rgba(212, 175, 55, 0.20);
+}
+
+.nav-segment-brand.nav-brand-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 25;
+  pointer-events: auto;
+  border: none;
+  padding: 0;
 }
 
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   text-decoration: none;
   flex-shrink: 0;
 }
+
+.brand-logo-frame {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Circular gold halo glow behind the oversized logo */
+.brand-logo-frame::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.55) 0%, rgba(243, 229, 171, 0.20) 50%, transparent 72%);
+  filter: blur(5px);
+  opacity: 0.85;
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.brand:hover .brand-logo-frame::before {
+  opacity: 1;
+  transform: scale(1.15);
+  background: radial-gradient(circle, rgba(243, 229, 171, 0.75) 0%, rgba(212, 175, 55, 0.35) 60%, transparent 75%);
+}
+
+.brand-logo {
+  border-radius: 50%;
+  object-fit: contain;
+}
+
+/* Oversized Circular Logo */
+.brand-logo-oversize {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  object-fit: contain;
+  background: radial-gradient(circle at 35% 35%, #182238 0%, #0B0F19 75%, #05070B 100%);
+  border: 2px solid rgba(243, 229, 171, 0.92);
+  padding: 4px;
+  box-shadow:
+    0 0 22px rgba(212, 175, 55, 0.50),
+    0 6px 18px rgba(0, 0, 0, 0.75),
+    inset 0 1px 2px rgba(255, 255, 255, 0.40);
+  display: block;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+.brand:hover .brand-logo-oversize {
+  transform: scale(1.08) rotate(3deg);
+  border-color: #FFFFFF;
+  box-shadow:
+    0 0 32px rgba(243, 229, 171, 0.85),
+    0 8px 24px rgba(0, 0, 0, 0.85),
+    inset 0 1px 3px rgba(255, 255, 255, 0.65);
+}
+
 .brand-text {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
-.brand-logo {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: contain;
-  filter: drop-shadow(0 2px 8px rgba(212, 175, 55, 0.45));
-  transition: transform 0.35s ease, filter 0.35s ease;
-}
-.brand:hover .brand-logo {
-  transform: scale(1.08) rotate(3deg);
-  filter: drop-shadow(0 4px 16px rgba(212, 175, 55, 0.75));
-}
+
 .brand-name {
   font-family: var(--font-display);
-  font-size: 12.5px;
-  letter-spacing: 0.24em;
+  font-size: 13.5px;
+  letter-spacing: 0.22em;
   color: #FFFFFF;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.2;
+  white-space: nowrap;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
+  transition: color 0.3s ease, text-shadow 0.3s ease;
 }
+
+.brand:hover .brand-name {
+  color: #FFFDF5;
+  text-shadow: 0 0 14px rgba(243, 229, 171, 0.65);
+}
+
 .brand-caption {
   font-family: var(--font-display);
   font-style: italic;
-  font-size: 11px;
-  letter-spacing: 0.1em;
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
   color: var(--gold-light);
   line-height: 1.2;
   font-weight: 400;
+  white-space: nowrap;
   transition: color 0.3s ease, text-shadow 0.3s ease;
 }
+
 .brand:hover .brand-caption {
   color: #FFF2CC;
-  text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
+}
+
+/* Nav Brand Spacer: clears room for the centered brand between Gallery and Why Us */
+.nav-brand-spacer {
+  width: 250px;
+  height: 1px;
+  flex-shrink: 0;
+  margin: 0 auto;
+  pointer-events: none;
 }
 
 /* Segment 2: Centered Capsule with Sliding Pill Indicator */
 .nav-segment-links {
+  width: 100%;
   flex: 1;
   display: flex;
-  justify-content: center;
   align-items: center;
   margin: 0;
 }
 
 .nav-capsule {
   position: relative;
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 2px;
-  background: rgba(5, 7, 13, 0.65);
-  border: 1px solid rgba(212, 175, 55, 0.22);
-  border-radius: 9999px;
-  padding: 4px 5px;
-  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.6);
+  width: 100%;
+  gap: 4px;
+  background: transparent;
+  border: none;
+  padding: 4px 88px 4px 6px;
+  box-shadow: none;
 }
 
-/* The Interactive Sliding Background Indicator Pill in Soft Gold */
+/* Sliding pill indicator removed as requested */
 .nav-sliding-pill {
-  position: absolute;
-  top: 4px;
-  bottom: 4px;
-  left: 0;
-  width: 0;
-  border-radius: 9999px;
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.28) 0%, rgba(243, 229, 171, 0.38) 50%, rgba(212, 175, 55, 0.22) 100%);
-  border: 1px solid rgba(212, 175, 55, 0.70);
-  box-shadow:
-    0 0 14px rgba(212, 175, 55, 0.45),
-    inset 0 1px 1.5px rgba(255, 255, 255, 0.40);
-  pointer-events: none;
-  z-index: 1;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), width 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
-  opacity: 0;
-  will-change: transform, width, opacity;
+  display: none !important;
 }
 
 .nav-item {
   position: relative;
   z-index: 2;
   font-family: var(--font-body);
-  font-size: 11.5px;
-  letter-spacing: 0.1em;
+  font-size: 12px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(245, 245, 247, 0.78);
+  color: rgba(245, 245, 247, 0.80);
   font-weight: 500;
-  padding: 6px 12px;
+  padding: 7px 15px;
   border-radius: 9999px;
   text-decoration: none;
   white-space: nowrap;
@@ -315,8 +379,8 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   /* absolute so it doesn't push text upward */
   position: absolute;
   bottom: 3px;
-  left: 12px;
-  right: 12px;
+  left: 14px;
+  right: 14px;
   height: 1.5px;
   border-radius: 9999px;
   background: linear-gradient(
@@ -370,14 +434,16 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   display: none;
 }
 
-/* Segment 3: Quick Action Buttons on the Right Corner */
+/* Segment 4: Quick Action Buttons on the Right Corner */
 .nav-segment-actions {
-  flex-shrink: 0;
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
   gap: 10px;
-  padding-left: 14px;
-  border-left: 1px solid rgba(212, 175, 55, 0.20);
+  z-index: 30;
 }
 
 /* Direct Phone Calling Button (+91 9626458516) */
@@ -419,10 +485,96 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   color: #FFF0BA;
 }
 
-/* Partnership Inquiries Button */
+/* Partnership Inquiries Button (Shifted below navbar, left corner under logo) */
 .nav-partner-btn {
   padding: 8px 16px;
   font-size: 11px;
+}
+
+.nav-sub-partner {
+  position: absolute;
+  top: calc(100% + 9px);
+  left: 14px;
+  z-index: 988;
+  display: inline-flex;
+  pointer-events: auto;
+  animation: fadeInDownSub 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.nav-partner-below-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #FFF8DC 0%, #F3E5AB 24%, #E5BE4A 50%, #D4AF37 75%, #B58B2A 100%);
+  color: #0B0F19;
+  border: 1px solid rgba(243, 229, 171, 0.9);
+  box-shadow:
+    0 4px 18px rgba(0, 0, 0, 0.55),
+    0 0 16px rgba(212, 175, 55, 0.40),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.85);
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nav-partner-below-btn:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.65),
+    0 0 24px rgba(212, 175, 55, 0.65),
+    inset 0 1px 2px rgba(255, 255, 255, 0.95);
+  border-color: #FFFFFF;
+  color: #000000;
+}
+
+.nav-partner-below-btn .partner-btn-dot {
+  color: #8C6A15;
+  font-size: 9px;
+  transition: transform 0.3s ease;
+}
+
+.nav-partner-below-btn:hover .partner-btn-dot {
+  transform: rotate(45deg) scale(1.2);
+}
+
+@keyframes fadeInDownSub {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 1024px) {
+  .nav-sub-partner {
+    left: 8px;
+    top: calc(100% + 7px);
+  }
+  .nav-partner-below-btn {
+    padding: 6px 14px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-sub-partner {
+    left: 4px;
+    top: calc(100% + 6px);
+  }
+  .nav-partner-below-btn {
+    padding: 5px 12px;
+    font-size: 9.5px;
+  }
 }
 
 .btn-pill-gold {
@@ -2278,6 +2430,52 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 .reveal { opacity: 0; transform: translateY(34px); transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1); will-change: opacity, transform; }
 .reveal.is-visible { opacity: 1; transform: none; }
 
+@media (max-width: 1320px) {
+  .nav-brand-spacer {
+    width: 235px;
+  }
+  .brand-logo-oversize {
+    width: 54px;
+    height: 54px;
+  }
+  .brand-name {
+    font-size: 13px;
+    letter-spacing: 0.20em;
+  }
+  .brand-caption {
+    font-size: 10px;
+  }
+  .nav-item {
+    padding: 6px 12px;
+    font-size: 11.5px;
+  }
+}
+
+@media (max-width: 1180px) {
+  .nav-brand-spacer {
+    width: 215px;
+  }
+  .brand-logo-oversize {
+    width: 50px;
+    height: 50px;
+  }
+  .brand-name {
+    font-size: 12px;
+    letter-spacing: 0.16em;
+  }
+  .brand-caption {
+    font-size: 9px;
+  }
+  .nav-item {
+    padding: 6px 9px;
+    font-size: 11px;
+    letter-spacing: 0.09em;
+  }
+  .nav-capsule {
+    gap: 2px;
+  }
+}
+
 @media (max-width: 1024px) {
   .nav {
     top: 14px;
@@ -2287,13 +2485,33 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
     transform: none;
   }
   .nav-inner.nav-island-inner {
-    padding: 6px 12px 6px 10px;
+    padding: 6px 12px 6px 12px;
     border-radius: 9999px;
     gap: 8px;
   }
-  .nav-segment-brand {
+  .nav-segment-brand.nav-brand-center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     border-right: none;
     padding-right: 0;
+    z-index: 25;
+  }
+  .brand-logo-oversize {
+    width: 48px;
+    height: 48px;
+    padding: 3px;
+  }
+  .brand-name {
+    font-size: 11.5px;
+    letter-spacing: 0.16em;
+  }
+  .brand-caption {
+    font-size: 9px;
+  }
+  .nav-brand-spacer {
+    display: none !important;
   }
   .nav-segment-actions {
     border-left: none;
@@ -2419,16 +2637,17 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
   .nav-inner.nav-island-inner {
     padding: 6px 10px;
   }
+  .brand-logo-oversize {
+    width: 44px;
+    height: 44px;
+    padding: 2.5px;
+  }
   .brand-name {
-    font-size: 11px;
-    letter-spacing: 0.16em;
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
   }
   .brand-caption {
-    font-size: 9px;
-  }
-  .brand-logo {
-    width: 34px;
-    height: 34px;
+    font-size: 8.5px;
   }
   .nav-call-btn {
     padding: 6px 10px;
