@@ -3417,6 +3417,31 @@ a.gallery-card {
   color: #F3E5AB;
 }
 
+/* Featured Spotlight Card when single picture in gallery */
+.gallery-card.gallery-spotlight-card {
+  grid-column: 3 / span 8;
+  height: 520px;
+  max-width: 680px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .gallery-card.gallery-spotlight-card {
+    grid-column: 1 / -1 !important;
+    max-width: 580px;
+    height: 480px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .gallery-card.gallery-spotlight-card {
+    grid-column: 1 / -1 !important;
+    max-width: 100%;
+    height: 400px !important;
+  }
+}
+
 /* Gallery Filtering State Classes */
 .gallery-card.hidden {
   display: none !important;
