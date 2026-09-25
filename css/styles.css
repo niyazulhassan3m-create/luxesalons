@@ -3292,6 +3292,131 @@ body.portal-locked {
   transform: translateY(0);
 }
 
+/* Anchor Gallery Card & Instagram Reel Enhancements */
+a.gallery-card {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  cursor: pointer;
+}
+
+.gallery-reel-card {
+  border-color: rgba(225, 48, 108, 0.25);
+}
+
+.gallery-reel-card:hover {
+  border-color: rgba(225, 48, 108, 0.7);
+  box-shadow: 0 24px 50px -10px rgba(0, 0, 0, 0.85),
+              0 0 32px rgba(225, 48, 108, 0.3),
+              0 0 18px rgba(212, 175, 55, 0.25),
+              inset 0 1px 2px rgba(255, 255, 255, 0.25);
+}
+
+.gallery-loc-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #F3E5AB;
+  margin-bottom: 6px;
+  background: rgba(212, 175, 55, 0.18);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  padding: 3px 10px;
+  border-radius: 9999px;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.gallery-loc-pill svg {
+  color: var(--gold);
+}
+
+.gallery-instagram-btn {
+  background: rgba(11, 15, 25, 0.82) !important;
+  border: 1px solid rgba(225, 48, 108, 0.4) !important;
+  color: #EDEAE0 !important;
+}
+
+.gallery-reel-card:hover .gallery-instagram-btn {
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%) !important;
+  border-color: rgba(255, 255, 255, 0.6) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 0 20px rgba(225, 48, 108, 0.65) !important;
+  transform: scale(1.1) rotate(5deg) !important;
+}
+
+.gallery-reel-badge-center {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 18px;
+  background: rgba(11, 15, 25, 0.85);
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  border-radius: 9999px;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.65), 0 0 18px rgba(212, 175, 55, 0.2);
+  z-index: 2;
+  transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  pointer-events: none;
+}
+
+.gallery-reel-card:hover .gallery-reel-badge-center {
+  background: linear-gradient(135deg, rgba(225, 48, 108, 0.92) 0%, rgba(131, 58, 180, 0.92) 100%);
+  border-color: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 14px 32px rgba(225, 48, 108, 0.55), 0 0 24px rgba(212, 175, 55, 0.35);
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+.reel-play-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: #0b0f19;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.gallery-reel-card:hover .reel-play-circle {
+  background: #FFFFFF;
+  color: #dc2743;
+}
+
+.reel-play-text {
+  font-family: var(--font-body);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #F3E5AB;
+  transition: color 0.3s ease;
+}
+
+.gallery-reel-card:hover .reel-play-text {
+  color: #FFFFFF;
+}
+
+.gallery-reel-card .gallery-expand-cue {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--gold-light);
+}
+
+.gallery-reel-card:hover .gallery-expand-cue {
+  color: #F3E5AB;
+}
+
 /* Gallery Filtering State Classes */
 .gallery-card.hidden {
   display: none !important;

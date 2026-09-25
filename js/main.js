@@ -1,4 +1,4 @@
-﻿const SUPABASE_URL = "";
+const SUPABASE_URL = "";
 const SUPABASE_ANON_KEY = "";
 const SUBMISSIONS_TABLE = "partnership_inquiries";
 
@@ -593,11 +593,27 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
       badge: badge ? badge.textContent.replace("✦", "").trim() : "Showcase",
       title: title ? title.textContent.trim() : "Luxe Men Salon",
       desc: desc ? desc.textContent.trim() : "",
+      externalLink: card.getAttribute("data-external-link") || null,
     };
   });
 
-  let currentFilteredItems = [...items];
+  let currentFilteredItems = items.filter((it) => !it.externalLink);
   let activeLightboxIndex = 0;
+
+  // Auto-sync filter counts
+  filterBtns.forEach((btn) => {
+    const filter = btn.getAttribute("data-filter");
+    const countEl = btn.querySelector(".btn-filter-count");
+    if (countEl) {
+      const count = filter === "all"
+        ? galleryCards.length
+        : galleryCards.filter((c) => {
+            const cat = c.getAttribute("data-category") || "";
+            return cat === filter || cat.split(" ").includes(filter);
+          }).length;
+      countEl.textContent = count;
+    }
+  });
 
   // Filter interaction
   filterBtns.forEach((btn) => {
@@ -612,12 +628,12 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
       currentFilteredItems = [];
       galleryCards.forEach((card) => {
-        const cat = card.getAttribute("data-category");
-        const match = filter === "all" || cat === filter;
+        const cat = card.getAttribute("data-category") || "";
+        const match = filter === "all" || cat === filter || cat.split(" ").includes(filter);
         if (match) {
           card.classList.remove("hidden");
           const item = items.find((it) => it.element === card);
-          if (item) currentFilteredItems.push(item);
+          if (item && !item.externalLink) currentFilteredItems.push(item);
         } else {
           card.classList.add("hidden");
         }
@@ -676,6 +692,17 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
   // Card click triggers
   galleryCards.forEach((card) => {
+    const extLink = card.getAttribute("data-external-link");
+    if (extLink) {
+      card.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (card.tagName.toLowerCase() !== "a") {
+          window.open(extLink, "_blank", "noopener,noreferrer");
+        }
+      });
+      return;
+    }
+
     card.addEventListener("click", () => {
       const idx = parseInt(card.getAttribute("data-index"), 10);
       const target = items.find((it) => it.index === idx);
