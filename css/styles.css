@@ -248,8 +248,12 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 }
 
 .brand-logo {
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   object-fit: contain;
+  display: block;
+  flex-shrink: 0;
 }
 
 /* Oversized Circular Logo */
@@ -2458,6 +2462,29 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 }
 .footer-inner { max-width: 1200px; margin: 0 auto; padding: 0 32px 50px; }
 .footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 60px; }
+.footer-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+  text-decoration: none;
+}
+.footer-brand .brand-logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: contain;
+  background: radial-gradient(circle at 35% 35%, #182238 0%, #0B0F19 75%, #05070B 100%);
+  border: 1.5px solid rgba(243, 229, 171, 0.7);
+  padding: 2px;
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.3);
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.footer-brand:hover .brand-logo {
+  transform: scale(1.06);
+  border-color: #FFFFFF;
+  box-shadow: 0 0 22px rgba(243, 229, 171, 0.6);
+}
 .footer p, .footer a { color: var(--muted); font-size: 14px; font-weight: 300; }
 .footer h4 { font-size: 13px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold-light); margin-bottom: 20px; }
 .footer-links { list-style: none; display: grid; gap: 12px; }
